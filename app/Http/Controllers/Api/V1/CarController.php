@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Api\BaseApiController;
+use App\Services\CarService;
+use App\Mappers\CarMapper;
+use App\DTO\Request\CreateCarDTO;
+use App\DTO\Request\PaginationDTO;
+use Illuminate\Http\Request;
+
+class CarController extends BaseApiController
+{
+    private CarService $service;
+    private CarMapper $mapper;
+
+    public function __construct(CarService $service, CarMapper $mapper)
+    {
+        $this->service = $service;
+        $this->mapper = $mapper;
+    }
+
+    public function create(Request $request)
+    {
+        $dto = CreateCarDTO::fromRequest($request);
+
+        if (!$dto->validate()) {
+            return $this->error($dto->errors, 422);
+        }
+
+        $car = $this->service->createCar($dto);
+
+        return $this->success(
+            $this->mapper->toResponse($car),
+            201
+        );
+    }
+
+    public function view(int $id)
+    {
+        $car = $this->service->getCar($id);
+
+        if (!$car) {
+            return $this->error('Car not found', 404);
+        }
+
+        return $this->success(
+            $this->mapper->toResponse($car)
+        );
+    }
+
+    public function list(Request $request)
+    {
+        $dto = PaginationDTO::fromRequest($request);
+
+        $cars = $this->service->getCars($dto);
+
+        return $this->success(
+            $this->mapper->toListResponse($cars)
+        );
+    }
+}
