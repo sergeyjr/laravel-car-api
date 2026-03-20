@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('api_user', function (Blueprint $table) {
             $table->id();
             $table->string('login', 100)->unique();
             $table->string('password');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('updated_at')->nullable();
         });
 
-        DB::table('user')->insert([
+        DB::table('api_user')->insert([
             'login' => 'admin',
             'password' => Hash::make('123456'),
             'created_at' => now(),
@@ -28,6 +28,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('api_user');
     }
 };

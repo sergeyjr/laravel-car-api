@@ -2,26 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Models\User;
+use App\Models\ApiUser;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function findByLogin(string $login): ?User
+    public function findByLogin(string $login): ?ApiUser
     {
-        return User::where('login', $login)->first();
+        return ApiUser::where('login', $login)->first();
     }
 
-    public function save(array $data): User
+    public function save(array $data): ApiUser
     {
         if (isset($data['id'])) {
-            $user = User::find($data['id']);
+            $user = ApiUser::find($data['id']);
 
             if (!$user) {
-                throw new \RuntimeException('User not found');
+                throw new \RuntimeException('ApiUser not found');
             }
         } else {
-            $user = new User();
+            $user = new ApiUser();
         }
 
         $user->login = $data['login'];
@@ -38,7 +38,7 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function saveToken(User $user, string $token): User
+    public function saveToken(ApiUser $user, string $token): ApiUser
     {
         $user->auth_token = $token;
 

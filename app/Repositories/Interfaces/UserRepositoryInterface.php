@@ -2,13 +2,13 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Models\User;
+use App\Models\ApiUser;
 
 interface UserRepositoryInterface
 {
-    public function findByLogin(string $login): ?User;
+    public function findByLogin(string $login): ?ApiUser;
 
-    public function save(array $data): User;
+    public function save(array $data): ApiUser;
 
-    public function saveToken(User $user, string $token): User;
+    public function saveToken(ApiUser $user, string $token): ApiUser;
 }

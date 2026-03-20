@@ -2,13 +2,13 @@
 
 namespace App\Mappers;
 
-use App\Models\User;
+use App\Models\ApiUser;
 
 class UserMapper
 {
-    public function toModel(array $data, ?User $user = null): User
+    public function toModel(array $data, ?ApiUser $user = null): ApiUser
     {
-        $user = $user ?? new User();
+        $user = $user ?? new ApiUser();
 
         $user->login = $data['login'] ?? $user->login;
         $user->password = $data['password'] ?? $user->password;
@@ -17,7 +17,7 @@ class UserMapper
         return $user;
     }
 
-    public function toArray(User $user): array
+    public function toArray(ApiUser $user): array
     {
         return [
             'id' => $user->id,

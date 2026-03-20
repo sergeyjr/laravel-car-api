@@ -3,12 +3,21 @@
 @section('content')
     <h1>Login</h1>
 
+    @if($errors->any())
+        <div style="color:red;">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <input class="form-control mb-2" name="email" placeholder="Email">
-        <input class="form-control mb-2" type="password" name="password" placeholder="Password">
+        <input name="email" value="{{ old('email') }}" placeholder="Email">
+        <br><br>
 
-        <button class="btn btn-success">Login</button>
+        <input type="password" name="password" placeholder="Password">
+        <br><br>
+
+        <button type="submit">Login</button>
     </form>
 @endsection

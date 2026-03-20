@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\ApiUser;
 
 return [
 
@@ -40,13 +40,19 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'users', // сайт
+        ],
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'api_users', // API
+            'hash' => false,
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | User Providers
+    | ApiUser Providers
     |--------------------------------------------------------------------------
     |
     | All authentication guards have a user provider, which defines how the
@@ -64,13 +70,13 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'api_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ApiUser::class,
+        ],
     ],
 
     /*

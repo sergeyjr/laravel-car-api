@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Welcome</h1>
-    <p>This is the home page.</p>
+    <h1>Home</h1>
+
+    @auth
+        <p>You are logged in</p>
+    @else
+        <p>You are guest</p>
+    @endauth
+
 @endsection
