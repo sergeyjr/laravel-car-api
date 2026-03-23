@@ -24,3 +24,7 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 Route::get('/hello', [HelloController::class, 'index']);
+
+Route::get('/welcome', function () {
+    return view('welcome');
+});
