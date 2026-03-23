@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 class CarController extends BaseApiController
 {
+
     private CarService $service;
     private CarMapper $mapper;
 
@@ -22,6 +23,7 @@ class CarController extends BaseApiController
 
     public function create(Request $request)
     {
+
         $dto = CreateCarDTO::fromRequest($request);
 
         if (!$dto->validate()) {
@@ -34,6 +36,7 @@ class CarController extends BaseApiController
             $this->mapper->toResponse($car),
             201
         );
+
     }
 
     public function view(int $id)
@@ -59,4 +62,5 @@ class CarController extends BaseApiController
             $this->mapper->toListResponse($cars)
         );
     }
+
 }

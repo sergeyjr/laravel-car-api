@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\FlexibleAuthMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\JsonResponse;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,9 +13,22 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withExceptions(function ($exceptions) {
+        $exceptions->render(function (\Throwable $e, $request) {
+            return new JsonResponse([
+                'success' => false,
+                'data' => null,
+                'errors' => $e->getMessage(),
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null,
+            ], 500);
+        });
+    })
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'auth.flex' => FlexibleAuthMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

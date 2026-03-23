@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class AuthController extends BaseApiController
 {
+
     private AuthService $service;
 
     public function __construct(AuthService $service)
@@ -32,4 +33,5 @@ class AuthController extends BaseApiController
             'token' => $token
         ]);
     }
+
 }

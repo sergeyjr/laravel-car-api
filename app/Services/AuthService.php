@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
+
     private UserRepository $users;
 
     public function __construct(UserRepository $users)
@@ -28,4 +29,10 @@ class AuthService
 
         return $token;
     }
+
+    public function check(string $token): bool
+    {
+        return $this->users->findByToken($token) !== null;
+    }
+
 }

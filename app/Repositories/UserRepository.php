@@ -48,4 +48,10 @@ class UserRepository implements UserRepositoryInterface
 
         return $user;
     }
+
+    public function findByToken(string $token): ?ApiUser
+    {
+        return ApiUser::where('auth_token', $token)->first();
+    }
+
 }
