@@ -7,10 +7,15 @@ use App\DTO\Request\PaginationDTO;
 use App\Models\Car;
 use App\Repositories\Interfaces\CarRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 
 class CarService
 {
+
     private CarRepositoryInterface $repository;
+
+    // private const CACHE_VERSION_KEY = 'cars_cache_version';
+    private const CACHE_TTL = 600;
 
     public function __construct(CarRepositoryInterface $repository)
     {
@@ -19,33 +24,40 @@ class CarService
 
     public function createCar(CreateCarDTO $request): Car
     {
-        $data = [
+
+        $car = $this->repository->save([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'photo_url' => $request->photo_url,
             'contacts' => $request->contacts,
             'options' => $request->options,
-        ];
+        ]);
 
-        return $this->repository->save($data);
+        // инвалидируем список
+        // Cache::increment(self::CACHE_VERSION_KEY);
+
+        // инвалидируем конкретную машину
+        Cache::forget("car:{$car->id}");
+
+        return $car;
+
     }
 
     public function getCar(int $id): ?Car
     {
-        return $this->repository->findById($id);
+        $cacheKey = "car:$id";
+
+        return Cache::remember($cacheKey, self::CACHE_TTL, function () use ($id) {
+            return $this->repository->findById($id);
+        });
     }
 
     public function getCars(PaginationDTO $pagination): LengthAwarePaginator
     {
         $query = $this->repository->getQuery();
 
-        if ($pagination->sort) {
-            $direction = str_starts_with($pagination->sort, '-') ? 'desc' : 'asc';
-            $field = ltrim($pagination->sort, '-');
-
-            $query->orderBy($field, $direction);
-        }
+        $this->applySort($query, $pagination->sort);
 
         return $query->paginate(
             $pagination->pageSize,
@@ -53,5 +65,17 @@ class CarService
             'page',
             $pagination->page
         );
+
     }
+
+    private function applySort($query, ?string $sort): void
+    {
+        if (!$sort) return;
+
+        $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
+        $field = ltrim($sort, '-');
+
+        $query->orderBy($field, $direction);
+    }
+
 }

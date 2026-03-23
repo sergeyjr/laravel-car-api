@@ -31,8 +31,17 @@ class CarRepository implements CarRepositoryInterface
             $car->save();
 
             if (!empty($data['options'])) {
-                foreach ($data['options'] as $option) {
-                    $this->optionRepository->saveOption($car->id, $option);
+                $options = $data['options'];
+                if (is_array($options) && isset($options['brand'])) {
+                    $options = [$options];
+                }
+                if (is_array($options)) {
+                    foreach ($options as $option) {
+                        if (!is_array($option)) {
+                            continue;
+                        }
+                        $this->optionRepository->saveOption($car->id, $option);
+                    }
                 }
             }
 
