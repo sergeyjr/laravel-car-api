@@ -24,6 +24,12 @@ class CarController extends BaseApiController
     public function create(Request $request)
     {
 
+        if (is_array($request->all()) && array_is_list($request->all())) {
+            return $this->error([
+                'message' => 'Invalid request format. Expected single object, array given.'
+            ], 422);
+        }
+
         $dto = CreateCarDTO::fromRequest($request);
 
         if (!$dto->validate()) {

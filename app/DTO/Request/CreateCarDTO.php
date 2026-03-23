@@ -38,7 +38,7 @@ class CreateCarDTO
             'price' => ['required', 'numeric'],
             'photo_url' => ['required', 'string'],
             'contacts' => ['required', 'string'],
-            'options' => ['nullable', 'array'],
+            'options' => ['nullable', 'array', 'list'],
         ]);
 
         if ($validator->fails()) {
