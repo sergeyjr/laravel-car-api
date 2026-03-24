@@ -174,7 +174,7 @@ Authorization: Bearer <token>
 Либо:
 
 ```http
-X-API-KEY: kpR85bh5hge%$
+X-API-KEY: <key>
 ```
 
 ---
@@ -186,7 +186,7 @@ X-API-KEY: kpR85bh5hge%$
 ```http
 POST http://localhost:8000/api/v1/car/create
 Content-Type: application/json
-Authorization: Bearer <token>
+Authorization: Bearer <token> либо X-API-KEY: <key>
 
 {
   "title": "Audi A4",
@@ -212,6 +212,8 @@ Authorization: Bearer <token>
 
 ```http
 GET http://localhost:8000/api/v1/car/list?page=1&pageSize=2
+Content-Type: application/json
+Authorization: Bearer <token> либо X-API-KEY: <key>
 ```
 
 ---
@@ -220,6 +222,8 @@ GET http://localhost:8000/api/v1/car/list?page=1&pageSize=2
 
 ```http
 GET http://localhost:8000/api/v1/car/1
+Content-Type: application/json
+Authorization: Bearer <token> либо X-API-KEY: <key>
 ```
 
 ---
