@@ -2,14 +2,15 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Models\Car;
 use Illuminate\Database\Eloquent\Builder;
 
 interface CarRepositoryInterface
 {
-    public function save(array $data): Car;
 
-    public function findById(int $id): ?Car;
+    public function save(array $data): array;
+
+    public function findById(int $id): ?array;
 
     public function getQuery(): Builder;
+
 }

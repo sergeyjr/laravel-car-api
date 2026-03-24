@@ -9,26 +9,27 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CarMapper
 {
-    public function toResponse(Car $car): CarResponse
+
+    public function toResponse(array $car): CarResponse
     {
         $dto = new CarResponse();
 
-        $dto->id = $car->id;
-        $dto->title = $car->title;
-        $dto->description = $car->description;
-        $dto->price = $car->price;
-        $dto->photo_url = $car->photo_url;
-        $dto->contacts = $car->contacts;
+        $dto->id = $car['id'] ?? null;
+        $dto->title = $car['title'] ?? null;
+        $dto->description = $car['description'] ?? null;
+        $dto->price = $car['price'] ?? null;
+        $dto->photo_url = $car['photo_url'] ?? null;
+        $dto->contacts = $car['contacts'] ?? null;
 
-        $option = $car->option;
+        $option = $car['option'] ?? null;
 
         $dto->options = $option ? [[
-            'brand' => $option->brand,
-            'model' => $option->model,
-            'year' => $option->year,
-            'body' => $option->body,
-            'mileage' => $option->mileage,
-        ]] : null;
+            'brand' => $option['brand'] ?? null,
+            'model' => $option['model'] ?? null,
+            'year' => $option['year'] ?? null,
+            'body' => $option['body'] ?? null,
+            'mileage' => $option['mileage'] ?? null,
+        ]] : [];
 
         return $dto;
     }
@@ -38,7 +39,9 @@ class CarMapper
         $items = [];
 
         foreach ($paginator->items() as $car) {
-            $items[] = $this->toResponse($car);
+            $items[] = $this->toResponse(
+                $car->toArray()
+            );
         }
 
         return new CarListResponse(
@@ -48,4 +51,5 @@ class CarMapper
             $paginator->perPage()
         );
     }
+
 }

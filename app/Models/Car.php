@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Car extends Model
 {
+
     protected $table = 'car';
 
     protected $fillable = [

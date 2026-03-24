@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateCarDTO
 {
+
     public string $title;
     public string $description;
     public float $price;
@@ -38,7 +39,17 @@ class CreateCarDTO
             'price' => ['required', 'numeric'],
             'photo_url' => ['required', 'string'],
             'contacts' => ['required', 'string'],
+
             'options' => ['nullable', 'array', 'list'],
+
+            'options.*' => ['array'],
+
+            // поля НЕ обязательны, но если есть — проверяем
+            'options.*.brand' => ['sometimes', 'string', 'max:100'],
+            'options.*.model' => ['sometimes', 'string', 'max:100'],
+            'options.*.year' => ['sometimes', 'integer', 'min:1885'],
+            'options.*.body' => ['sometimes', 'string', 'max:100'],
+            'options.*.mileage' => ['sometimes', 'integer', 'min:0'],
         ]);
 
         if ($validator->fails()) {
@@ -60,4 +71,5 @@ class CreateCarDTO
             'options' => $this->options,
         ];
     }
+
 }

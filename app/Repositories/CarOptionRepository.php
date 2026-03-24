@@ -7,7 +7,8 @@ use App\Repositories\Interfaces\CarOptionRepositoryInterface;
 
 class CarOptionRepository implements CarOptionRepositoryInterface
 {
-    public function saveOption(int $carId, array $data): CarOption
+
+    public function saveOption(int $carId, array $data): array
     {
         $option = new CarOption();
 
@@ -22,11 +23,7 @@ class CarOptionRepository implements CarOptionRepositoryInterface
             throw new \RuntimeException('Failed to save car option');
         }
 
-        return $option;
+        return $option->toArray();
     }
 
-    public function findByCarId(int $carId): ?CarOption
-    {
-        return CarOption::where('car_id', $carId)->first();
-    }
 }

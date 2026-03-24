@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\DTO\Request\CreateCarDTO;
 use App\DTO\Request\PaginationDTO;
-use App\Models\Car;
 use App\Repositories\Interfaces\CarRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -14,7 +13,6 @@ class CarService
 
     private CarRepositoryInterface $repository;
 
-    // private const CACHE_VERSION_KEY = 'cars_cache_version';
     private const CACHE_TTL = 600;
 
     public function __construct(CarRepositoryInterface $repository)
@@ -22,9 +20,8 @@ class CarService
         $this->repository = $repository;
     }
 
-    public function createCar(CreateCarDTO $request): Car
+    public function createCar(CreateCarDTO $request): array
     {
-
         $car = $this->repository->save([
             'title' => $request->title,
             'description' => $request->description,
@@ -34,23 +31,23 @@ class CarService
             'options' => $request->options,
         ]);
 
-        // инвалидируем список
-        // Cache::increment(self::CACHE_VERSION_KEY);
-
-        // инвалидируем конкретную машину
-        Cache::forget("car:{$car->id}");
+        Cache::forget("car:{$car['id']}");
 
         return $car;
-
     }
 
-    public function getCar(int $id): ?Car
+    public function getCar(int $id): ?array
     {
         $cacheKey = "car:$id";
 
-        return Cache::remember($cacheKey, self::CACHE_TTL, function () use ($id) {
+        try {
+            return Cache::remember($cacheKey, self::CACHE_TTL, function () use ($id) {
+                return $this->repository->findById($id);
+            });
+        } catch (\Throwable $e) {
             return $this->repository->findById($id);
-        });
+        }
+
     }
 
     public function getCars(PaginationDTO $pagination): LengthAwarePaginator
@@ -65,7 +62,6 @@ class CarService
             'page',
             $pagination->page
         );
-
     }
 
     private function applySort($query, ?string $sort): void

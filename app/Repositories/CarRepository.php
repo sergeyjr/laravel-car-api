@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class CarRepository implements CarRepositoryInterface
 {
+
     private CarOptionRepository $optionRepository;
 
     public function __construct(CarOptionRepository $optionRepository)
@@ -16,7 +17,7 @@ class CarRepository implements CarRepositoryInterface
         $this->optionRepository = $optionRepository;
     }
 
-    public function save(array $data): Car
+    public function save(array $data): array
     {
         return DB::transaction(function () use ($data) {
 
@@ -36,17 +37,19 @@ class CarRepository implements CarRepositoryInterface
                 }
             }
 
-            return $car->load('option');
+            return $car->load('option')->toArray();
         });
     }
 
-    public function findById(int $id): ?Car
+    public function findById(int $id): ?array
     {
-        return Car::with('option')->find($id);
+        $car = Car::with('option')->find($id);
+        return $car ? $car->toArray() : null;
     }
 
     public function getQuery(): Builder
     {
-        return Car::with('option');//->query();
+        return Car::with('option');
     }
+
 }
