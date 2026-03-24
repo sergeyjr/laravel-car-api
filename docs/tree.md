@@ -42,6 +42,12 @@ API
 ├── app/Helpers
 │   └── ApiResponse.php
 │
+├── database/migrations
+│   ├── 2026_03_13_212150_create_car_table.php
+│   ├── 2026_03_13_212521_create_car_option_table.php
+│   ├── 2026_03_15_185048_create_api_user_table.php
+│   └── 2026_03_16_120834_seed_car_data.php
+│
 └── config / .env
 ├── API_KEY
 └── AUTH_MODE

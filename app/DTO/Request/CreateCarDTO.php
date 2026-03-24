@@ -40,16 +40,18 @@ class CreateCarDTO
             'photo_url' => ['required', 'string'],
             'contacts' => ['required', 'string'],
 
-            'options' => ['nullable', 'array', 'list'],
+            // options может отсутствовать
+            'options' => ['nullable', 'array'],
 
+            // если есть — это массив объектов
             'options.*' => ['array'],
 
-            // поля НЕ обязательны, но если есть — проверяем
-            'options.*.brand' => ['sometimes', 'string', 'max:100'],
-            'options.*.model' => ['sometimes', 'string', 'max:100'],
-            'options.*.year' => ['sometimes', 'integer', 'min:1885'],
-            'options.*.body' => ['sometimes', 'string', 'max:100'],
-            'options.*.mileage' => ['sometimes', 'integer', 'min:0'],
+            // ВСЕ поля обязательны, если options передан
+            'options.*.brand' => ['required', 'string'],
+            'options.*.model' => ['required', 'string'],
+            'options.*.year' => ['required', 'integer', 'min:1885'],
+            'options.*.body' => ['required', 'string'],
+            'options.*.mileage' => ['required', 'integer', 'min:0'],
         ]);
 
         if ($validator->fails()) {
