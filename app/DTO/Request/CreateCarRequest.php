@@ -5,7 +5,7 @@ namespace App\DTO\Request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CreateCarDTO
+class CreateCarRequest
 {
 
     public string $title;

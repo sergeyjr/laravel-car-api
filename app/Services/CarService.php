@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\DTO\Request\CreateCarDTO;
-use App\DTO\Request\PaginationDTO;
+use App\DTO\Request\CreateCarRequest;
+use App\DTO\Request\PaginationRequest;
 use App\Repositories\Interfaces\CarRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -20,7 +20,7 @@ class CarService
         $this->repository = $repository;
     }
 
-    public function createCar(CreateCarDTO $request): array
+    public function createCar(CreateCarRequest $request): array
     {
         $car = $this->repository->save([
             'title' => $request->title,
@@ -50,7 +50,7 @@ class CarService
 
     }
 
-    public function getCars(PaginationDTO $pagination): LengthAwarePaginator
+    public function getCars(PaginationRequest $pagination): LengthAwarePaginator
     {
         $query = $this->repository->getQuery();
 

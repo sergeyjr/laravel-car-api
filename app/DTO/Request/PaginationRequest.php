@@ -4,7 +4,7 @@ namespace App\DTO\Request;
 
 use Illuminate\Http\Request;
 
-class PaginationDTO
+class PaginationRequest
 {
     public int $page = 1;
     public int $pageSize = 5;

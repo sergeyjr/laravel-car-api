@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Services\CarService;
 use App\Mappers\CarMapper;
-use App\DTO\Request\CreateCarDTO;
-use App\DTO\Request\PaginationDTO;
+use App\DTO\Request\CreateCarRequest;
+use App\DTO\Request\PaginationRequest;
 use Illuminate\Http\Request;
 
 class CarController extends BaseApiController
@@ -30,7 +30,7 @@ class CarController extends BaseApiController
             ], 422);
         }
 
-        $dto = CreateCarDTO::fromRequest($request);
+        $dto = CreateCarRequest::fromRequest($request);
 
         if (!$dto->validate()) {
             return $this->error($dto->errors, 422);
@@ -60,7 +60,7 @@ class CarController extends BaseApiController
 
     public function list(Request $request)
     {
-        $dto = PaginationDTO::fromRequest($request);
+        $dto = PaginationRequest::fromRequest($request);
 
         $cars = $this->service->getCars($dto);
 

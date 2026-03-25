@@ -30,8 +30,8 @@ API
 │
 ├── app/DTO
 │   ├── Request
-│   │   ├── CreateCarDTO.php
-│   │   └── PaginationDTO.php
+│   │   ├── CreateCarRequest.php
+│   │   └── PaginationRequest.php
 │   └── Response
 │       ├── CarResponse.php
 │       └── CarListResponse.php
@@ -49,5 +49,3 @@ API
 │   └── 2026_03_16_120834_seed_car_data.php
 │
 └── config / .env
-├── API_KEY
-└── AUTH_MODE
