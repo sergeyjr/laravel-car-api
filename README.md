@@ -122,7 +122,7 @@ php artisan serve
 API будет доступно:
 
 ```text
-http://localhost:8000/api/v1
+http://localhost:8000/api
 ```
 
 ---
@@ -142,9 +142,9 @@ php artisan serve НЕ используется
 API будет доступно по адресу и порту, указанным в `docker-compose.yml`, например:
 
 ```text
-http://localhost/api/v1
+http://localhost/api
 или
-http://localhost:8080/api/v1
+http://localhost:8080/api
 ```
 
 ---
@@ -154,7 +154,7 @@ http://localhost:8080/api/v1
 ### Получение токена
 
 ```http
-POST http://localhost:8000/api/v1/auth/login?login=admin&password=123456
+POST http://localhost/api/auth/login?login=admin&password=123456
 ```
 
 (порт зависит от способа запуска)
@@ -184,7 +184,7 @@ X-API-KEY: <key>
 ### Создание авто
 
 ```http
-POST http://localhost:8000/api/v1/car/create
+POST http://localhost/api/car/create
 Content-Type: application/json
 Authorization: Bearer <token> либо X-API-KEY: <key>
 
@@ -211,7 +211,7 @@ Authorization: Bearer <token> либо X-API-KEY: <key>
 ### Получение списка
 
 ```http
-GET http://localhost:8000/api/v1/car/list?page=1&pageSize=2
+GET http://localhost/api/car/list?page=1&pageSize=2
 Content-Type: application/json
 Authorization: Bearer <token> либо X-API-KEY: <key>
 ```
@@ -221,7 +221,7 @@ Authorization: Bearer <token> либо X-API-KEY: <key>
 ### Получение по id
 
 ```http
-GET http://localhost:8000/api/v1/car/1
+GET http://localhost/api/car/1
 Content-Type: application/json
 Authorization: Bearer <token> либо X-API-KEY: <key>
 ```

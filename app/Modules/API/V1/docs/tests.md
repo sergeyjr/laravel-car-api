@@ -3,7 +3,7 @@
 **Base URL:**
 
 ```
-http://localhost/api/v1
+http://localhost/api
 ```
 
 API использует единый формат ответа:
@@ -64,7 +64,7 @@ X-API-KEY: kpR85bh5hge%$
 **Запрос:**
 
 ```
-POST /api/v1/auth/login?login=admin&password=123456
+POST /api/auth/login?login=admin&password=123456
 ```
 
 **Логика:**
@@ -104,7 +104,7 @@ Authorization: Bearer {token}
 **Запрос:**
 
 ```
-POST /api/v1/car/create
+POST /api/car/create
 ```
 
 Требует авторизацию (token или API key).
@@ -143,7 +143,7 @@ POST /api/v1/car/create
 **Запрос:**
 
 ```
-GET http://localhost/api/v1/car/list?page=1&pageSize=2
+GET http://localhost/api/car/list?page=1&pageSize=2
 ```
 
 **Параметры:**
@@ -172,7 +172,7 @@ GET http://localhost/api/v1/car/list?page=1&pageSize=2
 **Запрос:**
 
 ```
-GET http://localhost/api/v1/car/1
+GET http://localhost/api/car/1
 ```
 
 **Ответ:**

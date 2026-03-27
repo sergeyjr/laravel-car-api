@@ -29,8 +29,8 @@ routes/api.php
 Группировка:
 
 ```text
-/api/v1/auth
-/api/v1/car
+/api/auth
+/api/car
 ```
 
 ---
