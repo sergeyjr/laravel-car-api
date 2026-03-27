@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Repositories\CarOptionRepository;
-use App\Repositories\CarRepository;
-use App\Repositories\Interfaces\CarOptionRepositoryInterface;
-use App\Repositories\Interfaces\CarRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
-use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
+use Modules\API\V1\Repositories\ApiUserRepository;
+use Modules\API\V1\Repositories\CarOptionRepository;
+use Modules\API\V1\Repositories\CarRepository;
+use Modules\API\V1\Repositories\Interfaces\ApiUserRepositoryInterface;
+use Modules\API\V1\Repositories\Interfaces\CarOptionRepositoryInterface;
+use Modules\API\V1\Repositories\Interfaces\CarRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(ApiUserRepositoryInterface::class, ApiUserRepository::class);
         $this->app->bind(CarRepositoryInterface::class, CarRepository::class);
         $this->app->bind(CarOptionRepositoryInterface::class, CarOptionRepository::class);
     }

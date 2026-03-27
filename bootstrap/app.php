@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\FlexibleAuthMiddleware;
+use Modules\API\V1\Http\Middleware\FlexibleAuthMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withExceptions(function ($exceptions) {
-        $exceptions->render(function (\Throwable $e, $request) {
+        $exceptions->render(function (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
                 'data' => null,
@@ -27,8 +27,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.flex' => FlexibleAuthMiddleware::class,
         ]);
-    })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
     })
     ->create();
