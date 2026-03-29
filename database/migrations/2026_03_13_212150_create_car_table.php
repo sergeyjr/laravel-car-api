@@ -50,6 +50,7 @@ return new class extends Migration
         Artisan::call('db:seed', [
             '--class' => CarSeeder::class,
         ]);
+
     }
 
     public function down(): void
