@@ -29,8 +29,8 @@ routes/api.php
 Группировка:
 
 ```text
-/api/auth
-/api/car
+/api/v1/auth
+/api/v1/car
 ```
 
 ---
@@ -66,7 +66,7 @@ FlexibleAuthMiddleware
 ## Логин пользователя
 
 ```text
-POST /auth/login
+POST /api/v1/auth/login
 ```
 
 Поток:
@@ -94,7 +94,7 @@ DB (api_user)
 ## Создание автомобиля
 
 ```text
-POST /car/create
+POST /api/v1/car/create
 ```
 
 Поток:
@@ -133,7 +133,7 @@ ApiResponse
 ## Получение автомобиля
 
 ```text
-GET /car/{id}
+GET /api/v1/car/{id}
 ```
 
 Поток:
@@ -169,7 +169,7 @@ Response
 ## Получение списка автомобилей
 
 ```text
-GET /car/list
+GET /api/v1/car/list
 ```
 
 Поток:

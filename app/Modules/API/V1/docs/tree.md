@@ -18,8 +18,8 @@ API
 │   │
 │   ├── Http
 │   │   ├── Controllers
-│   │   │   ├── BaseApiController.php
 │   │   │   ├── AuthController.php
+│   │   │   ├── BaseApiController.php
 │   │   │   └── CarController.php
 │   │   │
 │   │   └── Middleware
@@ -48,17 +48,17 @@ API
 │   │   └── UserRepository.php
 │   │
 │   ├── Routes
-│   │   └── api.php
+│   │   ├── api.php
+│   │   └── web.php
 │   │
 │   └── Services
 │       ├── AuthService.php
 │       └── CarService.php
 │
-├── routes
-│   └── api.php
-│
 ├── bootstrap
 │   └── app.php
+│
+├── config / .env
 │
 ├── database
 │   └── migrations
@@ -69,4 +69,6 @@ API
 │
 ├── composer.json
 │
-└── config / .env
+└── routes
+├── api.php
+└── web.php
