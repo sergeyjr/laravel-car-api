@@ -3,6 +3,7 @@
 namespace Modules\API\V1\Services;
 
 use Illuminate\Support\Str;
+use Modules\API\V1\Exceptions\ServiceException;
 use Modules\API\V1\Repositories\ApiUserRepository;
 
 class AuthService
@@ -20,7 +21,7 @@ class AuthService
         $user = $this->users->findByLogin($login);
 
         if (!$user || !$user->validatePassword($password)) {
-            throw new \RuntimeException('Invalid login or password');
+            throw new ServiceException('Invalid login or password');
         }
 
         $token = Str::random(64);

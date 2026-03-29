@@ -2,6 +2,7 @@
 
 namespace Modules\API\V1\Repositories;
 
+use Modules\API\V1\Exceptions\RepositoryException;
 use Modules\API\V1\Models\CarOption;
 use Modules\API\V1\Repositories\Interfaces\CarOptionRepositoryInterface;
 
@@ -20,7 +21,7 @@ class CarOptionRepository implements CarOptionRepositoryInterface
         $option->mileage = $data['mileage'];
 
         if (!$option->save()) {
-            throw new \RuntimeException('Failed to save car option');
+            throw new RepositoryException('Failed to save car option');
         }
 
         return $option->toArray();

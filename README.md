@@ -101,13 +101,7 @@ docker-compose up -d
 php artisan migrate
 ```
 
-Если нужен тестовый набор данных:
-
-```bash
-php artisan db:seed
-или
-php artisan migrate --seed
-```
+Тестовый набор данных уже включен в файлы миграции, поэтому отдельный запуск команды php artisan db:seed не нужен.
 
 ---
 

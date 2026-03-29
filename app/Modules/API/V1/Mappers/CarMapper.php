@@ -13,6 +13,7 @@ class CarMapper
 
     public function toResponse(array $car): CarResponse
     {
+
         $dto = new CarResponse();
 
         $dto->id = $car['id'] ?? null;
@@ -34,10 +35,12 @@ class CarMapper
         }
 
         return $dto;
+
     }
 
     public function toListResponse(LengthAwarePaginator $paginator): CarListResponse
     {
+
         $items = [];
 
         foreach ($paginator->items() as $car) {
@@ -52,6 +55,7 @@ class CarMapper
             $paginator->total(),
             $paginator->perPage()
         );
+
     }
 
 }

@@ -26,7 +26,7 @@ class CarSeeder extends Seeder
             ['Skoda Octavia', 'Practical liftback', 14000, 'Liftback'],
             ['Kia Sportage', 'Modern SUV', 17000, 'SUV'],
             ['Hyundai Tucson', 'Family SUV', 17500, 'SUV'],
-            ['Tesla Model 3', 'Electric sedan', 35000, 'Sedan'],
+            ['Tesla Model3', 'Electric sedan', 35000, 'Sedan'],
         ];
 
         foreach ($cars as $car) {
@@ -34,7 +34,7 @@ class CarSeeder extends Seeder
                 'title' => $car[0],
                 'description' => $car[1],
                 'price' => $car[2],
-                'photo_url' => null,
+                'photo_url' => 'https://example.com/car.jpg',
                 'contacts' => 'admin@example.com',
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Modules\API\V1\DTO\Request\CarCreateRequest;
 use Modules\API\V1\DTO\Request\CarOptionRequest;
 use Modules\API\V1\DTO\Request\PaginationRequest;
+use Modules\API\V1\Exceptions\ServiceException;
 use Modules\API\V1\Repositories\Interfaces\CarRepositoryInterface;
 
 class CarService
@@ -29,7 +30,8 @@ class CarService
             $optionDto = CarOptionRequest::fromArray($item);
 
             if (!$optionDto->validate()) {
-                throw new \RuntimeException(json_encode($optionDto->errors));
+                $message = json_encode($optionDto->errors);
+                throw new ServiceException($message);
             }
 
             $options[] = $optionDto->toArray();
