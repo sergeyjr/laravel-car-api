@@ -60,18 +60,6 @@ class CarCreateRequest
         return empty($this->errors);
     }
 
-    public function getValidatedOptions(): array
-    {
-        $result = [];
-
-        foreach ($this->options ?? [] as $item) {
-            $dto = CarOptionRequest::fromArray($item);
-            $result[] = $dto->toArray();
-        }
-
-        return $result;
-    }
-
     public function toArray(): array
     {
         return [

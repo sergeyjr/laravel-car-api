@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -15,10 +16,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $credentials = $validator->validated();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -27,7 +37,8 @@ class AuthController extends Controller
 
         return back()->withErrors([
             'email' => 'Invalid credentials',
-        ]);
+        ])->withInput();
+
     }
 
     public function logout(Request $request)
