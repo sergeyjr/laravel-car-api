@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
         Schema::create('api_user', function (Blueprint $table) {
@@ -18,16 +19,11 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable();
         });
-
-        DB::table('api_user')->insert([
-            'login' => 'admin',
-            'password' => Hash::make('123456'),
-            'created_at' => now(),
-        ]);
     }
 
     public function down(): void
     {
         Schema::dropIfExists('api_user');
     }
+
 };

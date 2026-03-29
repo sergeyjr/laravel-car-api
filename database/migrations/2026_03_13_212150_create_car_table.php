@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
         Schema::create('car', function (Blueprint $table) {
@@ -13,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->decimal('price', 12, 2);
-            $table->string('photo_url');
+            $table->string('photo_url')->nullable();
             $table->string('contacts');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
@@ -24,4 +25,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('car');
     }
+
 };

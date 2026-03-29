@@ -7,18 +7,17 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
         Schema::create('car_option', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('car_id')->unique();
-
             $table->string('brand', 100);
             $table->string('model', 100);
             $table->integer('year');
             $table->string('body', 100);
             $table->integer('mileage');
-
             $table->foreign('car_id')
                 ->references('id')
                 ->on('car')
@@ -40,4 +39,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('car_option');
     }
+
 };

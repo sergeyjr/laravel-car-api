@@ -105,9 +105,9 @@ php artisan migrate
 
 ```bash
 php artisan db:seed
+или
+php artisan migrate --seed
 ```
-
-Примечание: если сидер встроен в миграции — достаточно `migrate`.
 
 ---
 

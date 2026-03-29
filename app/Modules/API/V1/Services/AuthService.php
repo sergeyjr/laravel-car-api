@@ -2,8 +2,8 @@
 
 namespace Modules\API\V1\Services;
 
-use Modules\API\V1\Repositories\ApiUserRepository;
 use Illuminate\Support\Str;
+use Modules\API\V1\Repositories\ApiUserRepository;
 
 class AuthService
 {
