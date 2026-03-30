@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>My Application</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,6 +14,7 @@
             <a class="nav-link d-inline text-white" href="{{ route('home') }}">Home</a>
             <a class="nav-link d-inline text-white" href="{{ route('about') }}">About</a>
             <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Contact</a>
+            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Cars</a>
 
             @auth
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
@@ -34,6 +35,8 @@
 
     @yield('content')
 </div>
+
+@stack('scripts')
 
 </body>
 </html>

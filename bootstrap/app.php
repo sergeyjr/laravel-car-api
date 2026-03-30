@@ -2,7 +2,6 @@
 
 use Modules\API\V1\Http\Middleware\FlexibleAuthMiddleware;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
 
