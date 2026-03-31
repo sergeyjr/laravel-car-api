@@ -68,7 +68,9 @@ class CarService
     {
         $query = $this->repository->getQuery();
 
-        $this->applySort($query, $pagination->sort);
+        $sort = $pagination->sort ?? '-id';
+
+        $this->applySort($query, $sort);
 
         return $query->paginate(
             $pagination->pageSize,

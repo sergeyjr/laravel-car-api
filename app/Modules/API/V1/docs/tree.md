@@ -23,7 +23,6 @@ API
 │   │   │   └── CarController.php
 │   │   │
 │   │   └── Middleware
-│   │       ├── ApiKeyMiddleware.php
 │   │       └── FlexibleAuthMiddleware.php
 │   │
 │   ├── Mappers

@@ -2,54 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Modules\API\V1\Services\CarService;
-use Modules\API\V1\Mappers\CarMapper;
-use Modules\API\V1\DTO\Request\PaginationRequest;
-
 class CarsController extends Controller
 {
-    public function index(
-        Request $request,
-        CarService $service,
-        CarMapper $mapper
-    ) {
-        $pagination = PaginationRequest::fromRequest($request);
 
-        $paginator = $service->getCars($pagination);
+    public function index()
+    {
+        return view('cars');
+    }
 
-        $list = $mapper->toListResponse($paginator);
-
+    public function show($id)
+    {
         return view('cars', [
-            'cars' => $list->items,
-            'pagination' => [
-                'current_page' => $list->page,
-                'total' => $list->total,
-                'per_page' => $list->perPage,
-            ],
-            'selectedCar' => null
+            'carId' => $id
         ]);
     }
 
-    public function show(
-        int $id,
-        CarService $service,
-        CarMapper $mapper
-    ) {
-        $car = $service->getCar($id);
-
-        if (!$car) {
-            return view('cars', [
-                'cars' => [],
-                'selectedCar' => null
-            ]);
-        }
-
-        $item = $mapper->toResponse($car);
-
-        return view('cars', [
-            'cars' => [],
-            'selectedCar' => $item
-        ]);
-    }
 }

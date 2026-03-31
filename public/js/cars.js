@@ -1,38 +1,40 @@
 const { createApp } = Vue;
 
+const API_KEY = 'kpR85bh5hge%$';
+
+axios.interceptors.request.use((config) => {
+    config.headers['X-API-KEY'] = API_KEY;
+    return config;
+});
+
 createApp({
     data() {
         return {
             cars: [],
+            car: null,
+
             page: 1,
             total: 0,
             perPage: 6,
+
+            ready: false,
             loading: false,
-            token: null
+
+            carId: globalThis.carId
         };
     },
 
     async mounted() {
-        this.token = localStorage.getItem('token');
-
-        if (!this.token) {
-            await this.login();
+        if (this.carId) {
+            await this.loadCar();
+        } else {
+            await this.loadCars();
         }
 
-        await this.loadCars();
+        this.ready = true;
     },
 
     methods: {
-        async login() {
-            const res = await axios.post('/api/v1/auth/login', {
-                login: 'admin',
-                password: '123456'
-            });
-
-            this.token = res.data.data.token;
-            localStorage.setItem('token', this.token);
-        },
-
         async loadCars(page = 1) {
             this.loading = true;
 
@@ -41,9 +43,6 @@ createApp({
                     params: {
                         page,
                         pageSize: this.perPage
-                    },
-                    headers: {
-                        Authorization: `Bearer ${this.token}`
                     }
                 });
 
@@ -53,14 +52,28 @@ createApp({
                 this.page = data.page;
                 this.total = data.total;
                 this.perPage = data.perPage;
-
             } finally {
                 this.loading = false;
             }
         },
 
-        getImageUrl(path) {
-            return path ? `/files/${path}` : '/images/cars/default.jpg';
+        async loadCar() {
+            this.loading = true;
+
+            try {
+                const res = await axios.get(`/api/v1/car/${this.carId}`);
+                this.car = res.data.data;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        goToCar(id) {
+            globalThis.location.href = `/cars/${id}`;
+        },
+
+        goBack() {
+            globalThis.location.href = '/cars';
         },
 
         nextPage() {
@@ -71,6 +84,10 @@ createApp({
             if (this.page > 1) {
                 this.loadCars(this.page - 1);
             }
+        },
+
+        getImageUrl(path) {
+            return path ? `/files/${path}` : '/images/cars/default.jpg';
         }
     }
 }).mount('#app');
