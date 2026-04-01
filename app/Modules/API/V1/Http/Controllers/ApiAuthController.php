@@ -5,7 +5,7 @@ namespace Modules\API\V1\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\API\V1\Services\AuthService;
 
-class AuthController extends BaseApiController
+class ApiAuthController extends BaseApiController
 {
 
     private AuthService $service;
@@ -17,6 +17,7 @@ class AuthController extends BaseApiController
 
     public function login(Request $request)
     {
+
         $data = $request->all();
 
         if (empty($data['login']) || empty($data['password'])) {

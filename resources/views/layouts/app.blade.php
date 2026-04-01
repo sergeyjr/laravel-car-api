@@ -1,41 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Application</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/cars.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'My Application')</title>
+    @stack('meta')
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    @stack('styles')
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="{{ route('home') }}">My Application</a>
+@include('partials.header')
 
-        <div>
-            <a class="nav-link d-inline text-white" href="{{ route('home') }}">Home</a>
-            <a class="nav-link d-inline text-white" href="{{ route('about') }}">About</a>
-            <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Contact</a>
-            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Cars</a>
-
-            @auth
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                    @csrf
-                    <button class="btn btn-link text-white">Logout</button>
-                </form>
-            @else
-                <a class="nav-link d-inline text-white" href="{{ route('login') }}">Login</a>
-            @endauth
-        </div>
-    </div>
-</nav>
+@include('partials.navbar')
 
 <div class="container mt-4">
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+    @include('partials.alerts')
     @yield('content')
 </div>
+
+@include('partials.footer')
+
+<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 
 @stack('scripts')
 

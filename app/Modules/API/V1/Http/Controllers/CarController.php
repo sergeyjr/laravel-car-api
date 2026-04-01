@@ -7,6 +7,7 @@ use Modules\API\V1\Services\CarService;
 use Modules\API\V1\Mappers\CarMapper;
 use Modules\API\V1\DTO\Request\CarCreateRequest;
 use Modules\API\V1\DTO\Request\PaginationRequest;
+use Database\Seeders\CarSeeder;
 
 class CarController extends BaseApiController
 {
@@ -22,16 +23,13 @@ class CarController extends BaseApiController
 
     public function create(Request $request)
     {
-        if (is_array($request->all()) && array_is_list($request->all())) {
-            return $this->error([
-                'message' => 'Invalid request format. Expected single object, array given.'
-            ], 422);
-        }
-
         $dto = CarCreateRequest::fromRequest($request);
 
         if (!$dto->validate()) {
-            return $this->error($dto->errors, 422);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $dto->errors
+            ], 422);
         }
 
         $car = $this->service->createCar($dto);
@@ -64,6 +62,24 @@ class CarController extends BaseApiController
         return $this->success(
             $this->mapper->toListResponse($cars)
         );
+    }
+
+    public function generateMock()
+    {
+
+        $seeder = new CarSeeder();
+
+        $cars = $seeder->cars;
+
+        $car = $cars[array_rand($cars)];
+
+        return $this->success([
+            'title' => $car[0],
+            'description' => $car[1],
+            'price' => $car[2],
+            'photo_url' => $seeder->photoUrlDefault,
+            'contacts' => 'admin@example.com',
+        ]);
     }
 
 }

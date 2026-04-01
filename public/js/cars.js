@@ -1,93 +1,106 @@
-const { createApp } = Vue;
-
 const API_KEY = 'kpR85bh5hge%$';
 
-axios.interceptors.request.use((config) => {
-    config.headers['X-API-KEY'] = API_KEY;
-    return config;
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('submitBtn').addEventListener('click', submitForm);
 });
 
-createApp({
-    data() {
-        return {
-            cars: [],
-            car: null,
-
-            page: 1,
-            total: 0,
-            perPage: 6,
-
-            ready: false,
-            loading: false,
-
-            carId: globalThis.carId
-        };
-    },
-
-    async mounted() {
-        if (this.carId) {
-            await this.loadCar();
-        } else {
-            await this.loadCars();
+function clearErrors() {
+    ['title','description','price','photo_url','contacts'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('is-invalid');
         }
 
-        this.ready = true;
-    },
+        const feedback = document.querySelector(`#${id}-error`);
+        if (feedback) feedback.innerText = '';
+    });
+}
 
-    methods: {
-        async loadCars(page = 1) {
-            this.loading = true;
+function setError(field, message) {
+    const el = document.getElementById(field);
+    if (!el) return;
 
-            try {
-                const res = await axios.get('/api/v1/car/list', {
-                    params: {
-                        page,
-                        pageSize: this.perPage
-                    }
-                });
+    el.classList.add('is-invalid');
 
-                const data = res.data.data;
+    let feedback = document.getElementById(field + '-error');
 
-                this.cars = data.items;
-                this.page = data.page;
-                this.total = data.total;
-                this.perPage = data.perPage;
-            } finally {
-                this.loading = false;
-            }
-        },
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.id = field + '-error';
+        feedback.className = 'invalid-feedback';
 
-        async loadCar() {
-            this.loading = true;
-
-            try {
-                const res = await axios.get(`/api/v1/car/${this.carId}`);
-                this.car = res.data.data;
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        goToCar(id) {
-            globalThis.location.href = `/cars/${id}`;
-        },
-
-        goBack() {
-            globalThis.location.href = '/cars';
-        },
-
-        nextPage() {
-            this.loadCars(this.page + 1);
-        },
-
-        prevPage() {
-            if (this.page > 1) {
-                this.loadCars(this.page - 1);
-            }
-        },
-
-        getImageUrl(path) {
-            return path ? `/files/${path}` : '/images/cars/default.jpg';
-        }
+        el.after(feedback);
     }
-}).mount('#app');
+
+    feedback.innerText = message;
+}
+
+function showMessage(text) {
+    document.getElementById('response').innerText = text;
+}
+
+async function submitForm() {
+    clearErrors();
+
+    const form = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        price: document.getElementById('price').value,
+        photo_url: document.getElementById('photo_url').value,
+        contacts: document.getElementById('contacts').value,
+        options: []
+    };
+
+    let response;
+
+    try {
+        response = await fetch('/api/v1/car/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-API-KEY': API_KEY
+            },
+            body: JSON.stringify(form)
+        });
+    } catch (e) {
+        showMessage('Ошибка сети');
+        return;
+    }
+
+    let data = await response.json();
+
+    if (!response.ok) {
+
+        if (response.status === 422) {
+
+            showMessage(data.message || 'Ошибка валидации');
+
+            Object.keys(data.errors || {}).forEach(field => {
+                const msg = data.errors[field][0];
+                setError(field, msg);
+            });
+
+            return;
+        }
+
+        showMessage(data.message || 'Ошибка сервера');
+        return;
+    }
+
+    showMessage('Успешно создано!');
+}
+
+document.getElementById('generateBtn').addEventListener('click', async () => {
+    const res = await fetch('/api/v1/cars/generate-mock');
+    const json = await res.json();
+
+    const data = json.data;
+
+    document.getElementById('title').value = data.title;
+    document.getElementById('description').value = data.description;
+    document.getElementById('price').value = data.price;
+    document.getElementById('photo_url').value = data.photo_url;
+    document.getElementById('contacts').value = data.contacts;
+});
+

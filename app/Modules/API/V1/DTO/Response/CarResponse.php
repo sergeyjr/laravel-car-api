@@ -8,7 +8,7 @@ class CarResponse
     public int $id;
     public string $title;
     public string $description;
-    public float $price;
+    public int|float|string|null $price;
     public string $photo_url;
     public string $contacts;
 

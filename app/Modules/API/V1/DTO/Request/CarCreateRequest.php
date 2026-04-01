@@ -7,12 +7,11 @@ use Illuminate\Support\Facades\Validator;
 
 class CarCreateRequest
 {
-
     public string $title;
     public string $description;
-    public float $price;
-    public string $photo_url;
-    public string $contacts;
+    public int|float|string|null $price;
+    public ?string $photo_url = null;
+    public ?string $contacts = null;
     public ?array $options = null;
 
     public array $errors = [];
@@ -21,9 +20,9 @@ class CarCreateRequest
     {
         $dto = new self();
 
-        $dto->title = $request->input('title');
-        $dto->description = $request->input('description');
-        $dto->price = (float) $request->input('price');
+        $dto->title = (string) $request->input('title', '');
+        $dto->description = (string) $request->input('description', '');
+        $dto->price = $request->input('price');
         $dto->photo_url = $request->input('photo_url');
         $dto->contacts = $request->input('contacts');
         $dto->options = $request->input('options');
@@ -36,12 +35,16 @@ class CarCreateRequest
         $validator = Validator::make($this->toArray(), [
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
-            'price' => ['required', 'numeric'],
+            'price' => ['required', 'numeric', 'min:0.01'],
             'photo_url' => ['required', 'string'],
             'contacts' => ['required', 'string'],
 
             'options' => ['nullable', 'array'],
-            'options.*' => ['array'],
+            'options.*.brand' => ['required_with:options', 'string'],
+            'options.*.model' => ['required_with:options', 'string'],
+            'options.*.year' => ['required_with:options', 'integer'],
+            'options.*.body' => ['required_with:options', 'string'],
+            'options.*.mileage' => ['required_with:options', 'integer'],
         ]);
 
         if ($validator->fails()) {
@@ -49,15 +52,7 @@ class CarCreateRequest
             return false;
         }
 
-        foreach ($this->options ?? [] as $index => $item) {
-            $optionDto = CarOptionRequest::fromArray($item);
-
-            if (!$optionDto->validate()) {
-                $this->errors["options.$index"] = $optionDto->errors;
-            }
-        }
-
-        return empty($this->errors);
+        return true;
     }
 
     public function toArray(): array
@@ -71,5 +66,4 @@ class CarCreateRequest
             'options' => $this->options,
         ];
     }
-
 }
