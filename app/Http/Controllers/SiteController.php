@@ -29,11 +29,6 @@ class SiteController extends Controller
         return view('pages.contact');
     }
 
-    public function dashboard()
-    {
-        return view('dashboard.index');
-    }
-
     public function sendContact(Request $request)
     {
         $validated = $request->validate([

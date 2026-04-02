@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     @stack('meta')
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @stack('styles')
 </head>
 <body class="@yield('body-class')">
@@ -15,6 +16,7 @@
 @include('partials.navbar')
 
 <main class="container mt-4">
+    <div id="alert-container"></div>
     @include('partials.alerts')
     @yield('content')
 </main>

@@ -5,39 +5,51 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
 
-                <h1>Create Car</h1>
+                <h1 class="mb-4">Create Car</h1>
 
-                <div class="card">
-                    <div class="card-header">Create Car</div>
+                <pre id="response" class="mb-3"></pre>
 
-                    <div class="card-body">
+                <form id="carForm">
 
-                        <pre id="response" class="mb-3"></pre>
-
-                        <input id="title" placeholder="Title" class="form-control mb-2">
-                        <input id="description" placeholder="Description" class="form-control mb-2">
-                        <input id="price" type="number" placeholder="Price" class="form-control mb-2">
-                        <input id="photo_url" placeholder="Photo URL" class="form-control mb-2">
-                        <input id="contacts" placeholder="Contacts" class="form-control mb-2">
-
-                        <button id="submitBtn" class="btn btn-primary">
-                            Отправить
-                        </button>
-                        <button id="generateBtn" class="btn btn-secondary ms-2">
-                            Сгенерировать тестовые данные
-                        </button>
-
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input id="title" name="title" class="form-control">
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input id="price" name="price" type="number" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Photo URL</label>
+                        <input id="photo_url" name="photo_url" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contacts</label>
+                        <input id="contacts" name="contacts" class="form-control">
+                    </div>
+
+                    <button type="button" id="submitBtn" class="btn btn-primary">
+                        Отправить
+                    </button>
+
+                    <button type="button" id="generateBtn" class="btn btn-secondary ms-2">
+                        Сгенерировать тестовые данные
+                    </button>
+
+                </form>
 
             </div>
         </div>
     </div>
 @endsection
-
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/cars.css') }}">
-@endpush
 
 @push('scripts')
     <script src="{{ asset('js/cars.js') }}"></script>

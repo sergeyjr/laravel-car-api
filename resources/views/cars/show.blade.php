@@ -1,36 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="app">
 
-        <div v-if="car">
+    <h2 class="mb-4">{{ $car->title }}</h2>
 
-            <h2>{{ $car->title }}</h2>
+    <div class="row">
 
+        {{-- IMAGE --}}
+        <div class="col-md-5">
             <img
                 src="{{ $car->photo_url ? '/files/'.$car->photo_url : '/images/cars/default.jpg' }}"
-                style="max-width: 400px;"
+                class="img-fluid rounded"
+                style="max-height: 400px; object-fit: cover;"
             >
+        </div>
 
-            <p class="mt-3"><strong>Price:</strong> {{ $car->price }}</p>
-            <p><strong>Description:</strong> {{ $car->description }}</p>
+        {{-- INFO --}}
+        <div class="col-md-7">
+
+            <p><strong>Цена:</strong> {{ $car->price }}</p>
+            <p><strong>Описание:</strong> {{ $car->description }}</p>
 
             @if($car->option)
-                <p><strong>Brand:</strong> {{ $car->option->brand }}</p>
-                <p><strong>Model:</strong> {{ $car->option->model }}</p>
-                <p><strong>Year:</strong> {{ $car->option->year }}</p>
-                <p><strong>Mileage:</strong> {{ $car->option->mileage }}</p>
+                <p><strong>Бренд:</strong> {{ $car->option->brand }}</p>
+                <p><strong>Модель:</strong> {{ $car->option->model }}</p>
+                <p><strong>Год:</strong> {{ $car->option->year }}</p>
+                <p><strong>Пробег:</strong> {{ $car->option->mileage }}</p>
             @endif
-
-            <button class="btn btn-secondary mb-3" onclick="window.location.href='/cars'">
-                Back
-            </button>
 
         </div>
 
     </div>
+
+    <hr>
+
+    <button class="btn btn-secondary mt-3"
+            onclick="window.location.href='/cars'">
+        Назад
+    </button>
+
 @endsection
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/cars.css') }}">
-@endpush

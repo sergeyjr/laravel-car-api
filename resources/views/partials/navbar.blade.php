@@ -3,22 +3,38 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
 
-        <a class="navbar-brand" href="{{ route('home') }}">My Application</a>
+        <a class="navbar-brand" href="{{ route('home') }}">Мое приложение</a>
 
-        <div>
-            <a class="nav-link d-inline text-white" href="{{ route('about') }}">About</a>
-            <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Contact</a>
-            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Cars</a>
-            <a class="nav-link d-inline text-white" href="{{ url('/dashboard') }}">Dashboard</a>
+        <div class="nav-divider d-flex align-items-center">
+
+            <a class="nav-link d-inline text-white" href="{{ route('about') }}">О нас</a>
+            <span class="text-white mx-2">|</span>
+
+            <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Контакты</a>
+            <span class="text-white mx-2">|</span>
+
+            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Машины</a>
+            <span class="text-white mx-2">|</span>
+
+            <a class="nav-link d-inline text-white" href="{{ url('/dashboard') }}">Панель управления</a>
 
             @auth
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                <span class="text-white mx-2">|</span>
+
+                <a href="{{ route('logout') }}"
+                   class="nav-link d-inline text-white"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Выход
+                </a>
+
+                <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
                     @csrf
-                    <button class="btn btn-link text-white">Logout</button>
                 </form>
             @else
-                <a class="nav-link d-inline text-white" href="{{ route('login') }}">Login</a>
+                <span class="text-white mx-2">|</span>
+                <a class="nav-link d-inline text-white" href="{{ route('login') }}">Вход</a>
             @endauth
+
         </div>
 
     </div>

@@ -26,6 +26,8 @@
         @endforeach
     </div>
 
+    <hr>
+
     <div class="d-flex gap-2 mt-3">
         @if($cars->onFirstPage())
             <button disabled>Назад</button>
@@ -52,7 +54,3 @@
     </div>
 
 @endsection
-
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/cars.css') }}">
-@endpush

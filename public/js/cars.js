@@ -2,20 +2,29 @@ const API_KEY = 'kpR85bh5hge%$';
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('submitBtn').addEventListener('click', submitForm);
+
+    const generateBtn = document.getElementById('generateBtn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', generateMock);
+    }
 });
 
+/**
+ * CLEAR FIELD ERRORS
+ */
 function clearErrors() {
     ['title','description','price','photo_url','contacts'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-            el.classList.remove('is-invalid');
-        }
+        if (el) el.classList.remove('is-invalid');
 
-        const feedback = document.querySelector(`#${id}-error`);
-        if (feedback) feedback.innerText = '';
+        const feedback = document.getElementById(id + '-error');
+        if (feedback) feedback.remove();
     });
 }
 
+/**
+ * FIELD ERROR
+ */
 function setError(field, message) {
     const el = document.getElementById(field);
     if (!el) return;
@@ -28,19 +37,42 @@ function setError(field, message) {
         feedback = document.createElement('div');
         feedback.id = field + '-error';
         feedback.className = 'invalid-feedback';
-
         el.after(feedback);
     }
 
     feedback.innerText = message;
 }
 
-function showMessage(text) {
-    document.getElementById('response').innerText = text;
+/**
+ * HIDE ALL LARAVEL ALERTS (BY CLASS)
+ */
+function clearAlerts() {
+    document.querySelectorAll('.alert').forEach(el => el.remove());
 }
 
+/**
+ * SHOW ALERT (Laravel style)
+ */
+function showAlert(message, type = 'info') {
+    clearAlerts();
+
+    const container = document.getElementById('alert-container');
+
+    if (!container) return;
+
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.innerText = message;
+
+    container.prepend(alert);
+}
+
+/**
+ * SUBMIT FORM
+ */
 async function submitForm() {
     clearErrors();
+    clearAlerts();
 
     const form = {
         title: document.getElementById('title').value,
@@ -64,43 +96,68 @@ async function submitForm() {
             body: JSON.stringify(form)
         });
     } catch (e) {
-        showMessage('Ошибка сети');
+        showAlert('Ошибка сети', 'danger');
         return;
     }
 
     let data = await response.json();
 
-    if (!response.ok) {
+    /**
+     * VALIDATION ERROR (422)
+     */
+    if (!response.ok && response.status === 422) {
 
-        if (response.status === 422) {
+        showAlert(data.message || 'Ошибка валидации', 'danger');
 
-            showMessage(data.message || 'Ошибка валидации');
-
-            Object.keys(data.errors || {}).forEach(field => {
-                const msg = data.errors[field][0];
-                setError(field, msg);
+        if (data.errors) {
+            Object.keys(data.errors).forEach(field => {
+                setError(field, data.errors[field][0]);
             });
-
-            return;
         }
 
-        showMessage(data.message || 'Ошибка сервера');
         return;
     }
 
-    showMessage('Успешно создано!');
+    /**
+     * OTHER ERRORS
+     */
+    if (!response.ok) {
+        showAlert(data.message || 'Ошибка сервера', 'danger');
+        return;
+    }
+
+    /**
+     * SUCCESS
+     */
+    showAlert('Успешно создано!', 'success');
+
+    // optional reset
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('photo_url').value = '';
+    document.getElementById('contacts').value = '';
 }
 
-document.getElementById('generateBtn').addEventListener('click', async () => {
-    const res = await fetch('/api/v1/cars/generate-mock');
-    const json = await res.json();
+/**
+ * GENERATE MOCK DATA
+ */
+async function generateMock() {
+    try {
+        const res = await fetch('/api/v1/cars/generate-mock');
+        const json = await res.json();
 
-    const data = json.data;
+        const data = json.data;
 
-    document.getElementById('title').value = data.title;
-    document.getElementById('description').value = data.description;
-    document.getElementById('price').value = data.price;
-    document.getElementById('photo_url').value = data.photo_url;
-    document.getElementById('contacts').value = data.contacts;
-});
+        document.getElementById('title').value = data.title;
+        document.getElementById('description').value = data.description;
+        document.getElementById('price').value = data.price;
+        document.getElementById('photo_url').value = data.photo_url;
+        document.getElementById('contacts').value = data.contacts;
 
+        showAlert('Тестовые данные загружены', 'info');
+
+    } catch (e) {
+        showAlert('Ошибка генерации данных', 'danger');
+    }
+}

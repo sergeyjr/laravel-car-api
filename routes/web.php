@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -34,9 +36,34 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware('auth:web')->name('dashboard');
+Route::middleware('auth:web')->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])
+        ->name('dashboard.profile');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE ACTIONS
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('profile')->middleware('auth:web')->group(function () {
+
+    Route::post('/update', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::post('/password', [ProfileController::class, 'password'])
+        ->name('profile.password');
+
+    Route::delete('/', [ProfileController::class, 'destroy'])
+        ->name('profile.delete');
+
+});
 
 /*
 |--------------------------------------------------------------------------

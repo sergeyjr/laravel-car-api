@@ -2,15 +2,14 @@
 
 @section('content')
 
-    <h1>Contact</h1>
+    <h1>Контактная форма</h1>
 
     <form method="POST" action="{{ route('contact.send') }}">
         @csrf
 
-        {{-- Name --}}
         <div class="mb-3">
             <label class="form-label">
-                Name <span class="text-danger">*</span>
+                Имя <span class="text-danger">*</span>
             </label>
             <input
                 type="text"
@@ -21,7 +20,6 @@
             >
         </div>
 
-        {{-- Email --}}
         <div class="mb-3">
             <label class="form-label">
                 Email <span class="text-danger">*</span>
@@ -35,10 +33,9 @@
             >
         </div>
 
-        {{-- Subject --}}
         <div class="mb-3">
             <label class="form-label">
-                Subject <span class="text-danger">*</span>
+                Тема сообщения <span class="text-danger">*</span>
             </label>
             <input
                 type="text"
@@ -52,7 +49,7 @@
         {{-- Message --}}
         <div class="mb-3">
             <label class="form-label">
-                Message <span class="text-danger">*</span>
+                Текст сообщения <span class="text-danger">*</span>
             </label>
             <textarea
                 class="form-control @error('body') is-invalid @enderror"
@@ -62,7 +59,7 @@
             >{{ old('body') }}</textarea>
         </div>
 
-        <button class="btn btn-primary">Send</button>
+        <button class="btn btn-primary">Отправить</button>
     </form>
 
 @endsection
