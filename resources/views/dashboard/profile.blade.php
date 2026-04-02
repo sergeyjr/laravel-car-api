@@ -91,7 +91,7 @@
             </div>
 
             {{-- PASSWORD CHANGE --}}
-            <div class="card">
+            <div class="card mb-3">
 
                 <div class="card-header">
                     Смена пароля
@@ -130,6 +130,12 @@
                     </form>
 
                 </div>
+            </div>
+
+            <div class="col-12">
+                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                    ← Назад
+                </a>
             </div>
 
         </div>
