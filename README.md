@@ -1,9 +1,13 @@
-## Требования
+---
+
+# ## Требования
 
 Перед запуском убедиться, что установлены:
 
 * PHP >= 8.2
 * Composer
+* Node.js >= 18
+* NPM
 * PostgreSQL (или другая БД, если адаптируешь конфиг)
 * Redis (опционально, для кэша)
 * Docker + Docker Compose (опционально, если хочешь изолированное окружение)
@@ -23,6 +27,7 @@ cd <project>
 
 ```bash
 composer install
+npm install
 ```
 
 ---
@@ -101,7 +106,29 @@ docker-compose up -d
 php artisan migrate
 ```
 
-Тестовый набор данных уже включен в файлы миграции, поэтому отдельный запуск команды php artisan db:seed не нужен.
+Тестовый набор данных уже включен в миграции, поэтому `db:seed` не требуется.
+
+---
+
+## Сборка frontend (Vite)
+
+### Режим разработки
+
+```bash
+npm run dev
+```
+
+### Production build
+
+```bash
+npm run build
+```
+
+После сборки появится директория:
+
+```
+public/build
+```
 
 ---
 
@@ -109,17 +136,20 @@ php artisan migrate
 
 ### Вариант 1: без Docker
 
+В разных терминалах:
+
 ```bash
 php artisan serve
+npm run dev
 ```
 
 API будет доступно:
 
-```text
-http://localhost/api/v1
-или
-http://localhost:8080/api/v1
 ```
+http://localhost/api/v1
+```
+
+Frontend будет автоматически подхватываться через Vite.
 
 ---
 
@@ -129,19 +159,10 @@ http://localhost:8080/api/v1
 docker-compose up -d
 ```
 
-В этом случае:
+Frontend:
 
-```text
-php artisan serve НЕ используется
-```
-
-API будет доступно по адресу и порту, указанным в `docker-compose.yml`, например:
-
-```text
-http://localhost/api/v1
-или
-http://localhost:8080/api/v1
-```
+* либо собирается через `npm run build`
+* либо поднимается отдельно через `npm run dev`
 
 ---
 
@@ -153,21 +174,17 @@ http://localhost:8080/api/v1
 POST http://localhost/api/v1/auth/login?login=admin&password=123456
 ```
 
-(порт зависит от способа запуска)
-
 Скопировать токен из ответа.
 
 ---
 
 ### Использование
 
-Либо:
-
 ```http
 Authorization: Bearer <token>
 ```
 
-Либо:
+или
 
 ```http
 X-API-KEY: <key>
@@ -208,8 +225,6 @@ Authorization: Bearer <token> либо X-API-KEY: <key>
 
 ```http
 GET http://localhost/api/v1/car/list?page=1&pageSize=2
-Content-Type: application/json
-Authorization: Bearer <token> либо X-API-KEY: <key>
 ```
 
 ---
@@ -218,8 +233,6 @@ Authorization: Bearer <token> либо X-API-KEY: <key>
 
 ```http
 GET http://localhost/api/v1/car/1
-Content-Type: application/json
-Authorization: Bearer <token> либо X-API-KEY: <key>
 ```
 
 ---
@@ -240,33 +253,50 @@ php artisan route:clear
 → установить `CACHE_DRIVER=file`
 
 **Ошибка подключения к БД**
-→ проверить `.env` и доступность сервера
+→ проверить `.env`
 
 **401 Unauthorized**
-→ проверить заголовки и режим `AUTH_MODE`
+→ проверить токен или `API_KEY`
+
+**Нет стилей / пустая страница**
+→ запустить:
+
+```bash
+npm install
+npm run dev
+```
 
 ---
 
 ## Итог
 
-Минимальный pipeline запуска:
+### Минимальный запуск (DEV):
 
 ```bash
 composer install
+npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+
 php artisan serve
+npm run dev
 ```
 
-Если используется Docker:
+---
+
+### Docker вариант:
 
 ```bash
 composer install
+npm install
 cp .env.example .env
 php artisan key:generate
+
 docker-compose up -d
 php artisan migrate
 ```
 
-После этого API готово к тестированию.
+---
+
+После этого проект полностью готов к работе (backend + frontend).

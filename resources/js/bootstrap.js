@@ -1,3 +1,16 @@
 import axios from 'axios';
-globalThis.axios = axios;
-globalThis.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.axios = axios;
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+/**
+ * Laravel CSRF token auto attach
+ */
+const token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+    console.warn('CSRF token not found');
+}

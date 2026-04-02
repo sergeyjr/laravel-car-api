@@ -7,8 +7,7 @@
     <title>@yield('title', 'My Application')</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     @stack('meta')
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 <body class="@yield('body-class')">
@@ -22,9 +21,6 @@
 </main>
 
 @include('partials.footer')
-
-<script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
-<script src="{{ asset('js/app.js') }}"></script>
 
 @stack('scripts')
 
