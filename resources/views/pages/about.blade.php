@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
     <h1>About</h1>
-    <p>This is the about page.</p>
+
+    <div class="card">
+        <div class="card-body">
+            <pre style="white-space: pre-wrap;">{{ $content }}</pre>
+        </div>
+    </div>
+
 @endsection

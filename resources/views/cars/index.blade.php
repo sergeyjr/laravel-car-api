@@ -2,6 +2,8 @@
 
 @section('content')
 
+    <h1>Cars</h1>
+
     <div class="row">
         @foreach($cars as $car)
             <div class="col-4 mb-3">
@@ -26,24 +28,27 @@
 
     <div class="d-flex gap-2 mt-3">
         @if($cars->onFirstPage())
-            <button disabled>Prev</button>
+            <button disabled>Назад</button>
         @else
             <a href="{{ $cars->previousPageUrl() }}">
-                <button>Prev</button>
+                <button>Назад</button>
             </a>
         @endif
 
         @if($cars->hasMorePages())
             <a href="{{ $cars->nextPageUrl() }}">
-                <button>Next</button>
+                <button>Вперёд</button>
             </a>
         @else
-            <button disabled>Next</button>
+            <button disabled>Вперёд</button>
         @endif
     </div>
 
     <div class="mt-2">
-        Page: {{ $cars->currentPage() }} / {{ $cars->lastPage() }}
+        Страница: {{ $cars->currentPage() }} / {{ $cars->lastPage() }}
+        <br>
+        Показано {{ $cars->firstItem() }}–{{ $cars->lastItem() }}
+        из {{ $cars->total() }} автомобилей
     </div>
 
 @endsection

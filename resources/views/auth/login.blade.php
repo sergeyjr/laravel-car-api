@@ -1,23 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Login</h1>
 
-    @if($errors->any())
-        <div style="color:red;">
-            {{ $errors->first() }}
-        </div>
-    @endif
+    <h1>Login</h1>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <input name="email" value="{{ old('email') }}" placeholder="Email">
-        <br><br>
+        {{-- Email --}}
+        <div class="mb-3">
+            <label class="form-label">
+                Email <span class="text-danger">*</span>
+            </label>
+            <input
+                type="email"
+                name="email"
+                class="form-control @error('email') is-invalid @enderror"
+                value="{{ old('email') }}"
+                required
+            >
+        </div>
 
-        <input type="password" name="password" placeholder="Password">
-        <br><br>
+        {{-- Password --}}
+        <div class="mb-3">
+            <label class="form-label">
+                Password <span class="text-danger">*</span>
+            </label>
+            <input
+                type="password"
+                name="password"
+                class="form-control @error('password') is-invalid @enderror"
+                required
+            >
+        </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-primary">
+            Login
+        </button>
     </form>
 @endsection

@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('login', 100)->unique();
             $table->string('password');
             $table->string('auth_token')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps(); // created_at, updated_at
         });
 
         Artisan::call('db:seed', [

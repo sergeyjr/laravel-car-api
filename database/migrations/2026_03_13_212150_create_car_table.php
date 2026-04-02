@@ -19,8 +19,7 @@ return new class extends Migration
             $table->decimal('price', 12, 2);
             $table->string('photo_url');
             $table->string('contacts');
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps(); // created_at, updated_at
         });
 
         Schema::create('car_option', function (Blueprint $table) {
