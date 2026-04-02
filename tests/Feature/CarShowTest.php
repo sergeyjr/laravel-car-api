@@ -10,6 +10,11 @@ use Tests\TestCase;
 class CarShowTest extends TestCase
 {
 
+    /**
+     * Автоматически считается тестом, потому что имя начинается с test
+     *
+     * @return void
+     */
     public function test_get_car_by_id_returns_car_with_options(): void
     {
 

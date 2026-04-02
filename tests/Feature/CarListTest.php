@@ -13,6 +13,11 @@ class CarListTest extends TestCase
 
     // use RefreshDatabase; // achtung! полный сброс данных в бд!
 
+    /**
+     *  Автоматически считается тестом, потому что имя начинается с test
+     *
+     *  @return void
+     */
     public function test_car_list_returns_paginated_result(): void
     {
 

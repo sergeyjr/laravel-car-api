@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
+/**
+ * php artisan test --filter AuthTest
+ */
 class AuthTest extends TestCase
 {
 
