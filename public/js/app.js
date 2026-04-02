@@ -1,7 +1,10 @@
 const API_KEY = 'kpR85bh5hge%$';
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('submitBtn').addEventListener('click', submitForm);
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', submitForm);
+    }
 
     const generateBtn = document.getElementById('generateBtn');
     if (generateBtn) {
@@ -13,7 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
  * CLEAR FIELD ERRORS
  */
 function clearErrors() {
-    ['title','description','price','photo_url','contacts'].forEach(id => {
+    [
+        'title','description','price','photo_url','contacts',
+        'brand','model','year','body','mileage'
+    ].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove('is-invalid');
 
@@ -44,20 +50,16 @@ function setError(field, message) {
 }
 
 /**
- * HIDE ALL LARAVEL ALERTS (BY CLASS)
+ * ALERTS
  */
 function clearAlerts() {
     document.querySelectorAll('.alert').forEach(el => el.remove());
 }
 
-/**
- * SHOW ALERT (Laravel style)
- */
 function showAlert(message, type = 'info') {
     clearAlerts();
 
     const container = document.getElementById('alert-container');
-
     if (!container) return;
 
     const alert = document.createElement('div');
@@ -68,11 +70,74 @@ function showAlert(message, type = 'info') {
 }
 
 /**
+ * CHECK OPTIONS FILLED
+ */
+function getOptions() {
+    const brand = document.getElementById('brand').value.trim();
+    const model = document.getElementById('model').value.trim();
+    const year = document.getElementById('year').value.trim();
+    const body = document.getElementById('body').value.trim();
+    const mileage = document.getElementById('mileage').value.trim();
+
+    const anyFilled =
+        brand || model || year || body || mileage;
+
+    return {
+        anyFilled,
+        data: {
+            brand,
+            model,
+            year,
+            body,
+            mileage
+        }
+    };
+}
+
+/**
+ * VALIDATE OPTIONS (if needed)
+ */
+function validateOptions(options) {
+    const errors = [];
+
+    if (!options.brand) errors.push('brand');
+    if (!options.model) errors.push('model');
+    if (!options.year) errors.push('year');
+    if (!options.body) errors.push('body');
+    if (!options.mileage) errors.push('mileage');
+
+    return errors;
+}
+
+/**
  * SUBMIT FORM
  */
 async function submitForm() {
     clearErrors();
     clearAlerts();
+
+    const options = getOptions();
+
+    let optionsPayload = [];
+
+    /**
+     * RULE:
+     * if ANY option filled → all required
+     */
+    if (options.anyFilled) {
+        const missing = validateOptions(options.data);
+
+        if (missing.length > 0) {
+            missing.forEach(field => {
+                setError(field, 'Это поле обязательно');
+            });
+
+            showAlert('Заполните все опции автомобиля', 'danger');
+            return;
+        }
+
+        optionsPayload = [options.data];
+    }
 
     const form = {
         title: document.getElementById('title').value,
@@ -80,7 +145,7 @@ async function submitForm() {
         price: document.getElementById('price').value,
         photo_url: document.getElementById('photo_url').value,
         contacts: document.getElementById('contacts').value,
-        options: []
+        options: optionsPayload
     };
 
     let response;
@@ -102,11 +167,7 @@ async function submitForm() {
 
     let data = await response.json();
 
-    /**
-     * VALIDATION ERROR (422)
-     */
     if (!response.ok && response.status === 422) {
-
         showAlert(data.message || 'Ошибка валидации', 'danger');
 
         if (data.errors) {
@@ -114,33 +175,31 @@ async function submitForm() {
                 setError(field, data.errors[field][0]);
             });
         }
-
         return;
     }
 
-    /**
-     * OTHER ERRORS
-     */
     if (!response.ok) {
         showAlert(data.message || 'Ошибка сервера', 'danger');
         return;
     }
 
-    /**
-     * SUCCESS
-     */
     showAlert('Успешно создано!', 'success');
 
-    // optional reset
     document.getElementById('title').value = '';
     document.getElementById('description').value = '';
     document.getElementById('price').value = '';
     document.getElementById('photo_url').value = '';
     document.getElementById('contacts').value = '';
+
+    document.getElementById('brand').value = '';
+    document.getElementById('model').value = '';
+    document.getElementById('year').value = '';
+    document.getElementById('body').value = '';
+    document.getElementById('mileage').value = '';
 }
 
 /**
- * GENERATE MOCK DATA
+ * MOCK DATA
  */
 async function generateMock() {
     try {
@@ -155,9 +214,18 @@ async function generateMock() {
         document.getElementById('photo_url').value = data.photo_url;
         document.getElementById('contacts').value = data.contacts;
 
+        const opt = data.options?.[0];
+
+        document.getElementById('brand').value = opt?.brand ?? '';
+        document.getElementById('model').value = opt?.model ?? '';
+        document.getElementById('year').value = opt?.year ?? '';
+        document.getElementById('body').value = opt?.body ?? '';
+        document.getElementById('mileage').value = opt?.mileage ?? '';
+
         showAlert('Тестовые данные загружены', 'info');
 
     } catch (e) {
         showAlert('Ошибка генерации данных', 'danger');
     }
+
 }

@@ -16,14 +16,15 @@
 @include('partials.navbar')
 
 <main class="container mt-4">
-    <div id="alert-container"></div>
     @include('partials.alerts')
+    <div id="alert-container"></div>
     @yield('content')
 </main>
 
 @include('partials.footer')
 
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
+<script src="{{ asset('js/app.js') }}"></script>
 
 @stack('scripts')
 

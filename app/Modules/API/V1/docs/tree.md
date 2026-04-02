@@ -118,11 +118,11 @@
 │   │
 │   ├── css
 │   │   ├── bootstrap.min.css
-│   │   └── cars.css
+│   │   └── app.css
 │   │
 │   └── js
 │       ├── bootstrap.bundle.min.js
-│       └── cars.js
+│       └── app.js
 │
 ├── resources
 │   ├── css

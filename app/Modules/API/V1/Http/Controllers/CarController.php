@@ -66,12 +66,13 @@ class CarController extends BaseApiController
 
     public function generateMock()
     {
-
         $seeder = new CarSeeder();
 
         $cars = $seeder->cars;
 
         $car = $cars[array_rand($cars)];
+
+        [$brand, $model] = explode(' ', $car[0]) + [null, null];
 
         return $this->success([
             'title' => $car[0],
@@ -79,6 +80,15 @@ class CarController extends BaseApiController
             'price' => $car[2],
             'photo_url' => $seeder->photoUrlDefault,
             'contacts' => 'admin@example.com',
+            'options' => [
+                [
+                    'brand' => $brand,
+                    'model' => $model,
+                    'year' => 2020,
+                    'body' => $car[3],
+                    'mileage' => 50000,
+                ]
+            ]
         ]);
     }
 

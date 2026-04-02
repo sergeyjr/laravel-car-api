@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -49,6 +51,38 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:6', 'confirmed'],
+        ]);
+
+        if (User::where('email', $validated['email'])->exists()) {
+            return back()
+                ->withErrors(['email' => 'Этот email уже зарегистрирован'])
+                ->withInput();
+        }
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        Auth::login($user);
+
+        return redirect('/')->with('success', 'Регистрация успешна');
 
     }
 

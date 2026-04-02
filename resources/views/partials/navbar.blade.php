@@ -23,7 +23,10 @@
 
                 <a href="{{ route('logout') }}"
                    class="nav-link d-inline text-white"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                   onclick="event.preventDefault();
+                   if (confirm('Вы уверены, что хотите выйти?')) {
+                       document.getElementById('logout-form').submit();
+                   }">
                     Выход
                 </a>
 
