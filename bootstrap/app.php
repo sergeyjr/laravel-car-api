@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Middleware\EnsureApiRole;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
-use Modules\API\V1\Http\Middleware\FlexibleAuthMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -37,7 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'auth.flex' => FlexibleAuthMiddleware::class,
+            'api.role' => EnsureApiRole::class,
         ]);
     })
     ->create();

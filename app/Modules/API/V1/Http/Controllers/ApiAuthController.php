@@ -3,35 +3,42 @@
 namespace Modules\API\V1\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\API\V1\Services\AuthService;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class ApiAuthController extends BaseApiController
 {
 
-    private AuthService $service;
-
-    public function __construct(AuthService $service)
-    {
-        $this->service = $service;
-    }
-
     public function login(Request $request)
     {
 
-        $data = $request->all();
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-        if (empty($data['login']) || empty($data['password'])) {
-            return $this->error('login and password required', 400);
+        /** @var \App\Models\User $user */
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return $this->error('Invalid credentials', 401);
         }
 
-        $token = $this->service->login(
-            $data['login'],
-            $data['password']
-        );
+        if ($user->isUser()) {
+            return $this->error('Forbidden: no API access', 403);
+        }
+
+//        $token = $user->tokens()->first();
+//        if (!$token) {
+//            $token = $user->createToken('api')->plainTextToken;
+//        }
+
+        $apiToken = $user->createToken('api');
 
         return $this->success([
-            'token' => $token
+            'api_token' => $apiToken->plainTextToken
         ]);
+
     }
 
 }

@@ -1,4 +1,6 @@
-## Общие сведения
+---
+
+# ## Общие сведения
 
 **Base URL:**
 
@@ -12,82 +14,90 @@ API использует единый формат ответа:
 success / data / errors
 ```
 
-Доступ к методам `/car/*` защищён middleware `auth.flex:auto`, режим берётся из `.env`:
+---
+
+# ## Авторизация (актуальная схема)
+
+Проект использует **Laravel Sanctum**.
+
+Есть 2 типа авторизации:
+
+## 1. Web авторизация (сайт)
+
+* используется Laravel session (`Auth::attempt`)
+* работает через cookie
+* НЕ требует токена в JS
+
+## 2. API авторизация (Sanctum token)
+
+* используется Bearer token
+* хранится в `personal_access_tokens`
+* используется для API запросов (JS / Postman / Bruno)
+
+---
+
+# ## Роли пользователей
+
+Пользователь имеет поле:
 
 ```
-AUTH_MODE=any
+role: user | admin | api
+```
+
+### Методы модели:
+
+* `isUser()`
+* `isAdmin()`
+* `isApiUser()`
+
+---
+
+# ## Получение токена (Sanctum)
+
+Токен создаётся при логине через сайт или API.
+
+### Запрос:
+
+```
+POST /api/v1/auth/login
+```
+
+### Body:
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "123456"
+}
 ```
 
 ---
 
-## Режимы авторизации
+### Логика:
 
-**auth.flex:none**
-Доступ без авторизации. Используется для логина.
+* проверка пользователя через `Auth::attempt`
+* создание Sanctum token:
 
-**auth.flex:apikey**
-Требуется только API ключ.
-
-**auth.flex:token**
-Требуется только Bearer токен.
-
-**auth.flex:any**
-Достаточно либо API ключа, либо токена.
-
-**auth.flex:auto**
-Режим определяется через `.env` (`AUTH_MODE`).
+```php
+$user->createToken('web')->plainTextToken;
+```
 
 ---
 
-## API ключ
-
-Задаётся в `.env`:
-
-```
-API_KEY=kpR85bh5hge%$
-```
-
-Передаётся в заголовке:
-
-```
-X-API-KEY: kpR85bh5hge%$
-```
-
-Может использоваться вместо токена при режиме `any`.
-
----
-
-## Получение токена
-
-Токен отсутствует в базе по умолчанию и создаётся при логине.
-
-**Запрос:**
-
-```
-POST /api/v1/auth/login?login=admin&password=123456
-```
-
-**Логика:**
-
-* поиск пользователя по login
-* проверка пароля
-* генерация токена (строка длиной 64 символа)
-* сохранение в `api_user.auth_token`
-
-**Ответ:**
+### Ответ:
 
 ```json
 {
   "success": true,
   "data": {
-    "token": "..."
+    "token": "1|xxxxxxxxxxxxxxxx"
   }
 }
 ```
 
 ---
 
-## Использование токена
+# ## Использование токена
 
 Передаётся в заголовке:
 
@@ -95,11 +105,27 @@ POST /api/v1/auth/login?login=admin&password=123456
 Authorization: Bearer {token}
 ```
 
-При повторном логине токен перезаписывается.
+---
+
+# ## Защита API
+
+Все методы `/car/*` защищены middleware:
+
+```
+auth:sanctum
+```
 
 ---
 
-## Создание автомобиля
+# ## Важно про токены
+
+* токены НЕ привязаны к роли автоматически
+* роль проверяется отдельно (middleware / policy)
+* один пользователь может иметь несколько токенов
+
+---
+
+# ## Создание автомобиля
 
 **Запрос:**
 
@@ -107,9 +133,13 @@ Authorization: Bearer {token}
 POST http://localhost/api/v1/car/create
 ```
 
-Требует авторизацию (token или API key).
+### Требует:
 
-**Body:**
+* auth:sanctum
+
+---
+
+### Body:
 
 ```json
 {
@@ -130,34 +160,23 @@ POST http://localhost/api/v1/car/create
 }
 ```
 
-**Особенности:**
+---
 
-* `options` — массив
-* может быть пустым или отсутствовать
-* поля внутри валидируются по типам БД
+# ## Получение списка автомобилей
+
+```
+GET /api/v1/car/list?page=1&pageSize=2
+```
 
 ---
 
-## Получение списка автомобилей
-
-**Запрос:**
-
-```
-GET http://localhost/api/v1/car/list?page=1&pageSize=2
-```
-
-**Параметры:**
-
-* `page` — номер страницы
-* `pageSize` — количество элементов
-
-**Ответ:**
+### Ответ:
 
 ```json
 {
   "success": true,
   "data": {
-    "items": [...],
+    "items": [],
     "page": 1,
     "total": 10,
     "perPage": 2
@@ -167,88 +186,82 @@ GET http://localhost/api/v1/car/list?page=1&pageSize=2
 
 ---
 
-## Получение автомобиля по ID
-
-**Запрос:**
+# ## Получение автомобиля
 
 ```
-GET http://localhost/api/v1/car/1
+GET /api/v1/car/{id}
 ```
 
-**Ответ:**
+---
+
+# ## Mock данные
+
+```
+GET /api/v1/cars/generate-mock
+```
+
+### Требует:
+
+* auth:sanctum
+
+---
+
+### Ответ:
 
 ```json
 {
   "success": true,
   "data": {
-    "id": 1,
-    "title": "Audi A4",
-    "description": "German sedan",
-    "price": 18000,
+    "title": "...",
+    "description": "...",
+    "price": 123,
     "photo_url": "...",
     "contacts": "...",
-    "options": [
-      {
-        "brand": "Audi",
-        "model": "A4",
-        "year": 2018,
-        "body": "sedan",
-        "mileage": 120000
-      }
-    ]
+    "options": [...]
   }
 }
 ```
 
-Если опций нет:
+---
+
+# ## Ошибки
+
+### 401 Unauthorized
 
 ```json
-"options": []
+{
+  "success": false,
+  "errors": "Unauthenticated"
+}
 ```
 
 ---
 
-## Ошибки
-
-**Без авторизации:**
+### 403 Forbidden (роль)
 
 ```json
 {
   "success": false,
-  "errors": "Unauthorized"
+  "errors": "Forbidden"
 }
 ```
 
-**Неверный API ключ:**
+---
 
-```json
-{
-  "success": false,
-  "errors": "Invalid API key"
-}
-```
-
-**Неверный токен:**
-
-```json
-{
-  "success": false,
-  "errors": "Invalid token"
-}
-```
-
-**Ошибка валидации:**
+### Валидация
 
 ```json
 {
   "success": false,
   "errors": {
-    "field": ["error message"]
+    "field": ["message"]
   }
 }
 ```
 
-**Не найдено:**
+---
+
+### Not Found
 
 ```json
 {
@@ -259,18 +272,25 @@ GET http://localhost/api/v1/car/1
 
 ---
 
-## Порядок работы
+# ## Порядок работы
 
-1. Выполнить логин и получить токен (или использовать API ключ)
-2. Добавить заголовок авторизации
-3. Вызывать методы `/car/*`
-4. Использовать пагинацию и параметры запроса
+1. Войти через `/auth/login`
+2. Получить Sanctum token
+3. Сохранить token в frontend (localStorage / memory)
+4. Передавать:
+
+   ```
+   Authorization: Bearer token
+   ```
+5. Вызывать `/car/*` методы
 
 ---
 
-## Итог
+# ## Итог архитектуры
 
-API поддерживает два способа авторизации: токен и API ключ.
-Токен создаётся динамически при логине.
-Доступ регулируется через настраиваемые режимы.
-Структура запросов и ответов унифицирована.
+* Web = session auth (Laravel стандарт)
+* API = Sanctum tokens
+* роли = поле `role`
+* доступ = `auth:sanctum`
+
+---

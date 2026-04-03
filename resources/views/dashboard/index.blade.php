@@ -47,3 +47,7 @@
 
     </div>
 @endsection
+
+<script>
+    localStorage.setItem('web_token', "{{ session('web_token') }}");
+</script>

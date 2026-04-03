@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
 
-        <a class="navbar-brand" href="{{ route('home') }}">Тестовое приложение</a>
+        <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name') }}</a>
 
         <div class="nav-divider d-flex align-items-center">
 

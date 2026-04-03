@@ -17,29 +17,43 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
-            return redirect()->route('dashboard');
+
+            $user = Auth::user();
+            $user->tokens()->where('name', 'web')->delete();
+
+            $webToken = $user->createToken('web')->plainTextToken;
+
+            return redirect()->route('dashboard')->with([
+                'web_token' => $webToken
+            ]);
+
         }
 
         return back()->withErrors([
             'email' => __('auth.failed'),
         ])->onlyInput('email');
+
     }
 
     public function logout(Request $request)
     {
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/');
+
     }
 
     public function showRegister()
@@ -49,6 +63,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
@@ -59,11 +74,13 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => 'user',
         ]);
 
         Auth::login($user);
 
         return redirect('/');
+
     }
 
 }

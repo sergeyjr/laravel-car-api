@@ -1,17 +1,21 @@
 import './bootstrap';
 
-const API_KEY = 'kpR85bh5hge%$';
+console.log('App loaded');
 
 document.addEventListener('DOMContentLoaded', function () {
-    const submitBtn = document.getElementById('submitBtn');
+
+    // Кнопка "Создать автомобиль"
+    const submitBtn = document.getElementById('submitCreateCarBtn');
     if (submitBtn) {
-        submitBtn.addEventListener('click', submitForm);
+        submitBtn.addEventListener('click', submitCreateCarForm);
     }
 
-    const generateBtn = document.getElementById('generateBtn');
+    // Кнопка "Сгенерировать тестовые данные"
+    const generateBtn = document.getElementById('generateCarTestDataBtn');
     if (generateBtn) {
         generateBtn.addEventListener('click', generateMock);
     }
+
 });
 
 /**
@@ -34,6 +38,7 @@ function clearErrors() {
  * FIELD ERROR
  */
 function setError(field, message) {
+
     const el = document.getElementById(field);
     if (!el) return;
 
@@ -49,6 +54,7 @@ function setError(field, message) {
     }
 
     feedback.innerText = message;
+
 }
 
 /**
@@ -59,6 +65,7 @@ function clearAlerts() {
 }
 
 function showAlert(message, type = 'info') {
+
     clearAlerts();
 
     const container = document.getElementById('alert-container');
@@ -69,12 +76,14 @@ function showAlert(message, type = 'info') {
     alert.innerText = message;
 
     container.prepend(alert);
+
 }
 
 /**
  * CHECK OPTIONS FILLED
  */
 function getOptions() {
+
     const brand = document.getElementById('brand').value.trim();
     const model = document.getElementById('model').value.trim();
     const year = document.getElementById('year').value.trim();
@@ -93,13 +102,15 @@ function getOptions() {
             body,
             mileage
         }
-    };
+    }
+
 }
 
 /**
  * VALIDATE OPTIONS (if needed)
  */
 function validateOptions(options) {
+
     const errors = [];
 
     if (!options.brand) errors.push('brand');
@@ -109,12 +120,14 @@ function validateOptions(options) {
     if (!options.mileage) errors.push('mileage');
 
     return errors;
+
 }
 
 /**
  * SUBMIT FORM
  */
-async function submitForm() {
+async function submitCreateCarForm() {
+
     clearErrors();
     clearAlerts();
 
@@ -122,18 +135,11 @@ async function submitForm() {
 
     let optionsPayload = [];
 
-    /**
-     * RULE:
-     * if ANY option filled → all required
-     */
     if (options.anyFilled) {
         const missing = validateOptions(options.data);
 
         if (missing.length > 0) {
-            missing.forEach(field => {
-                setError(field, 'Это поле обязательно');
-            });
-
+            missing.forEach(field => setError(field, 'Это поле обязательно'));
             showAlert('Заполните все опции автомобиля', 'danger');
             return;
         }
@@ -150,24 +156,33 @@ async function submitForm() {
         options: optionsPayload
     };
 
+    const token = localStorage.getItem('api_token');
+
+    if (!token) {
+        showAlert('Сначала войдите в систему', 'danger');
+        return;
+    }
+
     let response;
 
     try {
+
         response = await fetch('/api/v1/car/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-API-KEY': API_KEY
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(form)
         });
+
     } catch (e) {
         showAlert('Ошибка сети', 'danger');
         return;
     }
 
-    let data = await response.json();
+    const data = await response.json();
 
     if (!response.ok && response.status === 422) {
         showAlert(data.message || 'Ошибка валидации', 'danger');
@@ -186,26 +201,30 @@ async function submitForm() {
     }
 
     showAlert('Успешно создано!', 'success');
-
-    document.getElementById('title').value = '';
-    document.getElementById('description').value = '';
-    document.getElementById('price').value = '';
-    document.getElementById('photo_url').value = '';
-    document.getElementById('contacts').value = '';
-
-    document.getElementById('brand').value = '';
-    document.getElementById('model').value = '';
-    document.getElementById('year').value = '';
-    document.getElementById('body').value = '';
-    document.getElementById('mileage').value = '';
 }
 
 /**
  * MOCK DATA
  */
 async function generateMock() {
+
+    const token = localStorage.getItem('web_token');
+    console.log(token);
+
+    if (!token) {
+        showAlert('Сначала войдите в систему', 'danger');
+        return;
+    }
+
     try {
-        const res = await fetch('/api/v1/cars/generate-mock');
+
+        const res = await fetch('/api/v1/cars/generate-mock', {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
         const json = await res.json();
 
         const data = json.data;
@@ -231,5 +250,3 @@ async function generateMock() {
     }
 
 }
-
-console.log('App loaded');

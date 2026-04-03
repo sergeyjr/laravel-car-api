@@ -79,11 +79,11 @@
 
             <!-- BUTTONS -->
             <div class="mt-4">
-                <button type="button" id="submitBtn" class="btn btn-primary">
+                <button type="button" id="submitCreateCarBtn" class="btn btn-primary">
                     Отправить
                 </button>
 
-                <button type="button" id="generateBtn" class="btn btn-secondary ms-2">
+                <button type="button" id="generateCarTestDataBtn" class="btn btn-secondary ms-2">
                     Сгенерировать тестовые данные
                 </button>
             </div>
