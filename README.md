@@ -1,3 +1,25 @@
+````md
+---
+
+## Документация проекта
+
+Вся основная информация по проекту разделена по отдельным документам:
+
+* **Логика системы и бизнес-правила**
+  `\app\Modules\API\V1\docs\logics.md`
+
+* **Требования и окружение проекта**
+  `\app\Modules\API\V1\docs\requirements.md`
+
+* **Структура проекта (дерево модулей/файлов)**
+  `\app\Modules\API\V1\docs\tree.md`
+
+* **Тестирование**
+  находится в отдельном документе:
+  `\app\Modules\API\V1\docs\tests.md`
+
+---
+
 ## Требования
 
 Перед запуском убедиться, что установлены:
@@ -6,9 +28,9 @@
 * Composer
 * Node.js >= 18
 * NPM
-* PostgreSQL (или другая БД, если адаптируешь конфиг)
+* PostgreSQL
 * Redis (опционально, для кэша)
-* Docker + Docker Compose (опционально, если хочешь изолированное окружение)
+* Docker + Docker Compose (опционально)
 
 ---
 
@@ -17,7 +39,7 @@
 ```bash
 git clone <repo_url>
 cd <project>
-```
+````
 
 ---
 
@@ -52,7 +74,7 @@ php artisan key:generate
 
 ```env
 APP_ENV=local
-APP_DEBUG=true
+APP_DEBUG=false
 APP_URL=http://localhost
 
 DB_CONNECTION=pgsql
@@ -65,9 +87,6 @@ DB_PASSWORD=your_password
 CACHE_DRIVER=redis
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-
-API_KEY=<API_KEY>
-AUTH_MODE=any
 ```
 
 Если Redis не используешь:
@@ -98,13 +117,11 @@ docker-compose up -d
 
 ---
 
-## Миграции и сиды
+## Миграции
 
 ```bash
 php artisan migrate
 ```
-
-Тестовый набор данных уже включен в миграции, поэтому `db:seed` не требуется.
 
 ---
 
@@ -116,25 +133,36 @@ php artisan migrate
 npm run dev
 ```
 
+* dev-сервер Vite
+* hot reload (мгновенное применение изменений)
+* файлы не сохраняются в `public/build`
+* используется только для разработки
+
+---
+
 ### Production build
 
 ```bash
 npm run build
 ```
 
-После сборки появится директория:
+* сборка в статические файлы
+* создается `public/build`
+* код оптимизируется (минификация, удаление лишнего)
+* используется без dev-сервера
 
-```
-public/build
-```
+---
+
+### Кратко
+
+* `npm run dev` — разработка (live-обновления, без оптимизации)
+* `npm run build` — продакшен (оптимизированные статические файлы)
 
 ---
 
 ## Запуск приложения
 
 ### Вариант 1: без Docker
-
-В разных терминалах:
 
 ```bash
 php artisan serve
@@ -147,8 +175,6 @@ API будет доступно:
 http://localhost/api/v1
 ```
 
-Frontend будет автоматически подхватываться через Vite.
-
 ---
 
 ### Вариант 2: с Docker
@@ -156,11 +182,6 @@ Frontend будет автоматически подхватываться че
 ```bash
 docker-compose up -d
 ```
-
-Frontend:
-
-* либо собирается через `npm run build`
-* либо поднимается отдельно через `npm run dev`
 
 ---
 
@@ -172,20 +193,12 @@ Frontend:
 POST http://localhost/api/v1/auth/login?login=admin&password=123456
 ```
 
-Скопировать токен из ответа.
-
 ---
 
 ### Использование
 
 ```http
 Authorization: Bearer <token>
-```
-
-или
-
-```http
-X-API-KEY: <key>
 ```
 
 ---
@@ -196,36 +209,13 @@ X-API-KEY: <key>
 
 ```http
 POST http://localhost/api/v1/car/create
-Content-Type: application/json
-Authorization: Bearer <token> либо X-API-KEY: <key>
-
-{
-  "title": "Audi A4",
-  "description": "German sedan",
-  "price": 18000,
-  "photo_url": "https://example.com/audi.jpg",
-  "contacts": "admin@example.com",
-  "options": [
-    {
-      "brand": "Audi",
-      "model": "A4",
-      "year": 2018,
-      "body": "sedan",
-      "mileage": 120000
-    }
-  ]
-}
 ```
-
----
 
 ### Получение списка
 
 ```http
 GET http://localhost/api/v1/car/list?page=1&pageSize=2
 ```
-
----
 
 ### Получение по id
 
@@ -266,9 +256,7 @@ npm run dev
 
 ---
 
-## Итог
-
-### Минимальный запуск (DEV):
+## Итог (DEV запуск)
 
 ```bash
 composer install
@@ -283,7 +271,7 @@ npm run dev
 
 ---
 
-### Docker вариант:
+## Docker запуск
 
 ```bash
 composer install
@@ -295,6 +283,5 @@ docker-compose up -d
 php artisan migrate
 ```
 
----
-
-После этого проект полностью готов к работе (backend + frontend).
+```
+```
