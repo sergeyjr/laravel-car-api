@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\Page;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 class SiteController extends Controller
 {
@@ -14,14 +14,13 @@ class SiteController extends Controller
         return view('pages.home');
     }
 
-    public function about()
+    public function page(string $code)
     {
-        $path = base_path('README.md');
-        $content = File::exists($path)
-            ? File::get($path)
-            : 'README.md not found';
+        $page = Page::where('code', $code)
+            ->where('is_active', true)
+            ->firstOrFail();
 
-        return view('pages.about', compact('content'));
+        return view('pages.page', compact('page'));
     }
 
     public function contact()

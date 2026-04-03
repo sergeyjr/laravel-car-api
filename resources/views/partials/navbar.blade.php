@@ -13,7 +13,7 @@
             <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Контакты</a>
             <span class="text-white mx-2">|</span>
 
-            <a class="nav-link d-inline text-white" href="{{ route('about') }}">О нас</a>
+            <a class="nav-link d-inline text-white" href="{{ route('page', 'about') }}">О проекте</a>
             <span class="text-white mx-2">|</span>
 
             <a class="nav-link d-inline text-white" href="{{ url('/dashboard') }}">Личный кабинет</a>
