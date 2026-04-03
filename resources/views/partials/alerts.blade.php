@@ -5,7 +5,7 @@
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger" id="alert-danger">
+    <div class="alert alert-danger" id="alert-error">
         {{ session('error') }}
     </div>
 @endif
@@ -23,14 +23,14 @@
 @endif
 
 @if(session('status'))
-    <div class="alert alert-primary" id="alert-primary">
+    <div class="alert alert-primary" id="alert-status">
         {{ session('status') }}
     </div>
 @endif
 
 @if($errors->any())
-    <div class="alert alert-danger" id="alert-error">
-        <strong>There were some problems with your input:</strong>
+    <div class="alert alert-danger" id="alert-any">
+        <strong>Пожалуйста, исправьте ошибки в форме:</strong>
         <ul class="mb-0 mt-2">
             @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>

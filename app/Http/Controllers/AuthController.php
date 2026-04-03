@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -18,19 +17,10 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
-
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $credentials = $validator->validated();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -38,20 +28,18 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials',
-        ])->withInput();
-
+            'email' => __('auth.failed'),
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
     {
-
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/');
-
     }
 
     public function showRegister()
@@ -61,18 +49,11 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:6', 'confirmed'],
         ]);
-
-        if (User::where('email', $validated['email'])->exists()) {
-            return back()
-                ->withErrors(['email' => 'Этот email уже зарегистрирован'])
-                ->withInput();
-        }
 
         $user = User::create([
             'name' => $validated['name'],
@@ -82,8 +63,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/')->with('success', 'Регистрация успешна');
-
+        return redirect('/');
     }
 
 }

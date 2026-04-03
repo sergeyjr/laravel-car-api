@@ -7,16 +7,16 @@
 
         <div class="nav-divider d-flex align-items-center">
 
-            <a class="nav-link d-inline text-white" href="{{ route('about') }}">О нас</a>
+            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Каталог</a>
             <span class="text-white mx-2">|</span>
 
             <a class="nav-link d-inline text-white" href="{{ route('contact') }}">Контакты</a>
             <span class="text-white mx-2">|</span>
 
-            <a class="nav-link d-inline text-white" href="{{ url('/cars') }}">Машины</a>
+            <a class="nav-link d-inline text-white" href="{{ route('about') }}">О нас</a>
             <span class="text-white mx-2">|</span>
 
-            <a class="nav-link d-inline text-white" href="{{ url('/dashboard') }}">Панель управления</a>
+            <a class="nav-link d-inline text-white" href="{{ url('/dashboard') }}">Личный кабинет</a>
 
             @auth
                 <span class="text-white mx-2">|</span>
