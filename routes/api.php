@@ -15,7 +15,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('car')->group(function () {
 
             // Получение списка машин
-            Route::get('/', [CarController::class, 'index']);
+            Route::get('/list', [CarController::class, 'list']);
 
             // Получение машины по ID
             Route::get(RoutePaths::ID, [CarController::class, 'show']);

@@ -136,7 +136,7 @@ class CarRepository implements CarRepositoryInterface
      */
     public function getQuery(): Builder
     {
-        return Car::with('options');
+        return Car::with('option');
     }
 
 }

@@ -25,7 +25,7 @@ class CarMapper
 
         $dto->options = [];
 
-        $options = $car['options'] ?? null;
+        $options = $car['option'] ?? null;
 
         if ($options) {
             $model = new CarOption($options);

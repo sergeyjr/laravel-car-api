@@ -2,12 +2,12 @@
 
 namespace Modules\API\V1\Http\Controllers;
 
+use Database\Seeders\CarSeeder;
 use Illuminate\Http\Request;
-use Modules\API\V1\Services\CarService;
-use Modules\API\V1\Mappers\CarMapper;
 use Modules\API\V1\DTO\Request\CarCreateRequest;
 use Modules\API\V1\DTO\Request\PaginationRequest;
-use Database\Seeders\CarSeeder;
+use Modules\API\V1\Mappers\CarMapper;
+use Modules\API\V1\Services\CarService;
 
 class CarController extends BaseApiController
 {
@@ -21,6 +21,36 @@ class CarController extends BaseApiController
     {
         $this->service = $service;
         $this->mapper = $mapper;
+    }
+
+    /**
+     * Получение списка машин
+     */
+    public function list(Request $request)
+    {
+        $dto = PaginationRequest::fromRequest($request);
+
+        $cars = $this->service->getCars($dto);
+
+        return $this->success(
+            $this->mapper->toListResponse($cars)
+        );
+    }
+
+    /**
+     * Получение машины по ID
+     */
+    public function show(int $id)
+    {
+        $car = $this->service->getCar($id);
+
+        if (!$car) {
+            return $this->error(self::CAR_NOT_FOUND, 404);
+        }
+
+        return $this->success(
+            $this->mapper->toResponse($car)
+        );
     }
 
     /**
@@ -42,36 +72,6 @@ class CarController extends BaseApiController
         return $this->success(
             $this->mapper->toResponse($car),
             201
-        );
-    }
-
-    /**
-     * Получение машины по ID
-     */
-    public function show(int $id)
-    {
-        $car = $this->service->getCar($id);
-
-        if (!$car) {
-            return $this->error(self::CAR_NOT_FOUND, 404);
-        }
-
-        return $this->success(
-            $this->mapper->toResponse($car)
-        );
-    }
-
-    /**
-     * Получение списка машин
-     */
-    public function index(Request $request)
-    {
-        $dto = PaginationRequest::fromRequest($request);
-
-        $cars = $this->service->getCars($dto);
-
-        return $this->success(
-            $this->mapper->toListResponse($cars)
         );
     }
 
