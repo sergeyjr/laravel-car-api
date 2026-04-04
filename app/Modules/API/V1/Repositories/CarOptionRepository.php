@@ -11,6 +11,7 @@ class CarOptionRepository implements CarOptionRepositoryInterface
 
     public function saveOption(int $carId, array $data): array
     {
+
         $option = new CarOption();
 
         $option->car_id = $carId;
@@ -21,10 +22,11 @@ class CarOptionRepository implements CarOptionRepositoryInterface
         $option->mileage = $data['mileage'];
 
         if (!$option->save()) {
-            throw new RepositoryException('Failed to save car option');
+            throw new RepositoryException('Не удалось сохранить опцию автомобиля');
         }
 
         return $option->toArray();
+
     }
 
 }

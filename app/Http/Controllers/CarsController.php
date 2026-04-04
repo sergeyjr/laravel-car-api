@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Modules\API\V1\DTO\Request\PaginationRequest;
 use Modules\API\V1\Models\Car;
 use Modules\API\V1\Services\CarService;
-use Illuminate\Http\Request;
 
 class CarsController extends Controller
 {
@@ -14,6 +14,9 @@ class CarsController extends Controller
         private CarService $service
     ) {}
 
+    /**
+     * Получение списка машин
+     */
     public function index(Request $request)
     {
         $pagination = new PaginationRequest([
@@ -26,6 +29,10 @@ class CarsController extends Controller
 
         return view('cars.index', compact('cars'));
     }
+
+    /**
+     * Получение машины по ID
+     */
     public function show($id)
     {
         $car = Car::with('option')->findOrFail($id);
@@ -35,6 +42,9 @@ class CarsController extends Controller
         ]);
     }
 
+    /**
+     * Создание машины
+     */
     public function create()
     {
         return view('cars.create');

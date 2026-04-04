@@ -7,7 +7,7 @@ use Exception;
 class RepositoryException extends Exception
 {
 
-    public function __construct(string $message = 'Unknown exception')
+    public function __construct(string $message = 'Неизвестная ошибка')
     {
         parent::__construct($message);
     }

@@ -80,6 +80,16 @@ class CarService
         );
     }
 
+    public function updateCar(int $id, array $data, bool $isFull = false): ?array
+    {
+        return $this->repository->update($id, $data, $isFull);
+    }
+
+    public function deleteCar(int $id): bool
+    {
+        return $this->repository->delete($id);
+    }
+
     private function applySort($query, ?string $sort): void
     {
         if (!$sort) {

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CarCreateRequest
 {
+
     public string $title;
     public string $description;
     public int|float|string|null $price;
@@ -33,12 +34,13 @@ class CarCreateRequest
     public function validate(): bool
     {
         $validator = Validator::make($this->toArray(), [
+            // car
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0.01'],
             'photo_url' => ['required', 'string'],
             'contacts' => ['required', 'string'],
-
+            // car options
             'options' => ['nullable', 'array'],
             'options.*.brand' => ['required_with:options', 'string'],
             'options.*.model' => ['required_with:options', 'string'],
@@ -66,4 +68,5 @@ class CarCreateRequest
             'options' => $this->options,
         ];
     }
+
 }

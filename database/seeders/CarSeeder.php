@@ -28,30 +28,40 @@ class CarSeeder extends Seeder
 
     public $photoUrlDefault = 'https://example.com/car.jpg';
 
+    public $emailDefault = 'admin@example.com';
+
+    /**
+     *  php artisan db:seed --class=CarSeeder
+     *  @return void
+     */
     public function run(): void
     {
 
         foreach ($this->cars as $car) {
+
             $carId = DB::table('car')->insertGetId([
                 'title' => $car[0],
                 'description' => $car[1],
                 'price' => $car[2],
                 'photo_url' => $this->photoUrlDefault,
-                'contacts' => 'admin@example.com',
+                'contacts' => $this->emailDefault,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
             [$brand, $model] = explode(' ', $car[0]) + [null, null];
 
-            DB::table('car_option')->insert([
+            $optionsArray = [
                 'car_id' => $carId,
                 'brand' => $brand,
                 'model' => $model,
                 'year' => 2020,
                 'body' => $car[3],
                 'mileage' => 50000,
-            ]);
+            ];
+
+            DB::table('car_option')->insert($optionsArray);
+
         }
 
     }

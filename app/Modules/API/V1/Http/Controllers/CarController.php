@@ -15,12 +15,17 @@ class CarController extends BaseApiController
     private CarService $service;
     private CarMapper $mapper;
 
+    public const CAR_NOT_FOUND = 'Машина не найдена';
+
     public function __construct(CarService $service, CarMapper $mapper)
     {
         $this->service = $service;
         $this->mapper = $mapper;
     }
 
+    /**
+     * Создание машины
+     */
     public function create(Request $request)
     {
         $dto = CarCreateRequest::fromRequest($request);
@@ -40,12 +45,15 @@ class CarController extends BaseApiController
         );
     }
 
-    public function view(int $id)
+    /**
+     * Получение машины по ID
+     */
+    public function show(int $id)
     {
         $car = $this->service->getCar($id);
 
         if (!$car) {
-            return $this->error('Car not found', 404);
+            return $this->error(self::CAR_NOT_FOUND, 404);
         }
 
         return $this->success(
@@ -53,7 +61,10 @@ class CarController extends BaseApiController
         );
     }
 
-    public function list(Request $request)
+    /**
+     * Получение списка машин
+     */
+    public function index(Request $request)
     {
         $dto = PaginationRequest::fromRequest($request);
 
@@ -64,8 +75,44 @@ class CarController extends BaseApiController
         );
     }
 
+    /**
+     * Обновление машины
+     */
+    public function update(int $id, Request $request)
+    {
+        $isFull = $request->isMethod('put');
+
+        $car = $this->service->updateCar($id, $request->all(), $isFull);
+
+        if (!$car) {
+            return $this->error(self::CAR_NOT_FOUND, 404);
+        }
+
+        return $this->success(
+            $this->mapper->toResponse($car)
+        );
+    }
+
+    /**
+     * Удаление машины
+     */
+    public function destroy(int $id)
+    {
+        $deleted = $this->service->deleteCar($id);
+
+        if (!$deleted) {
+            return $this->error(self::CAR_NOT_FOUND, 404);
+        }
+
+        return $this->success(null, 204);
+    }
+
+    /**
+     * Генерация тестовых данных для создания машины
+     */
     public function generateMock()
     {
+
         $seeder = new CarSeeder();
 
         $cars = $seeder->cars;
@@ -74,22 +121,23 @@ class CarController extends BaseApiController
 
         [$brand, $model] = explode(' ', $car[0]) + [null, null];
 
+        $optionsArray = [
+            'brand' => $brand,
+            'model' => $model,
+            'year' => 2020,
+            'body' => $car[3],
+            'mileage' => 50000,
+        ];
+
         return $this->success([
             'title' => $car[0],
             'description' => $car[1],
             'price' => $car[2],
             'photo_url' => $seeder->photoUrlDefault,
-            'contacts' => 'admin@example.com',
-            'options' => [
-                [
-                    'brand' => $brand,
-                    'model' => $model,
-                    'year' => 2020,
-                    'body' => $car[3],
-                    'mileage' => 50000,
-                ]
-            ]
+            'contacts' => $seeder->emailDefault,
+            'options' => $optionsArray
         ]);
+
     }
 
 }

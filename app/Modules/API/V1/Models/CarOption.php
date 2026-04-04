@@ -9,7 +9,6 @@ class CarOption extends Model
 {
 
     protected $table = 'car_option';
-    public $timestamps = false;
 
     protected $fillable = [
         'car_id',

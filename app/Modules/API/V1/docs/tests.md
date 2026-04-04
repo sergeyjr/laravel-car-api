@@ -1,79 +1,86 @@
+```md
+# API Documentation (v1)
+
 ---
 
-# ## Общие сведения
+# Общие сведения
 
 **Base URL:**
 
 ```
-http://localhost/api/v1
+
+[http://localhost/api/v1](http://localhost/api/v1)
+
 ```
 
 API использует единый формат ответа:
 
 ```
+
 success / data / errors
+
 ```
 
 ---
 
-# ## Авторизация (актуальная схема)
+# Авторизация (актуальная схема)
 
 Проект использует **Laravel Sanctum**.
 
-Есть 2 типа авторизации:
-
 ## 1. Web авторизация (сайт)
 
-* используется Laravel session (`Auth::attempt`)
-* работает через cookie
-* НЕ требует токена в JS
+- используется Laravel session (`Auth::attempt`)
+- работает через cookie
+- НЕ требует токена в JS
 
 ## 2. API авторизация (Sanctum token)
 
-* используется Bearer token
-* хранится в `personal_access_tokens`
-* используется для API запросов (JS / Postman / Bruno)
+- используется Bearer token
+- хранится в `personal_access_tokens`
+- используется для API запросов (Postman / Bruno / frontend)
 
 ---
 
-# ## Роли пользователей
+# Роли пользователей
 
 Пользователь имеет поле:
 
 ```
+
 role: user | admin | api
+
 ```
 
-### Методы модели:
+## Методы модели:
 
-* `isUser()`
-* `isAdmin()`
-* `isApiUser()`
+- `isUser()`
+- `isAdmin()`
+- `isApiUser()`
 
 ---
 
-# ## Получение токена (Sanctum)
+# Получение токена (Sanctum)
 
-Токен создаётся при логине через сайт или API.
+Токен создаётся при логине через API.
 
-### Запрос:
+## Запрос:
 
 ```
-POST /api/v1/auth/login
-```
 
-### Body:
+POST /auth/login
+
+````
+
+## Body:
 
 ```json
 {
   "email": "admin@example.com",
   "password": "123456"
 }
-```
+````
 
----
-
-### Логика:
+## Логика:
 
 * проверка пользователя через `Auth::attempt`
 * создание Sanctum token:
@@ -82,9 +89,7 @@ POST /api/v1/auth/login
 $user->createToken('web')->plainTextToken;
 ```
 
----
-
-### Ответ:
+## Ответ:
 
 ```json
 {
@@ -97,7 +102,7 @@ $user->createToken('web')->plainTextToken;
 
 ---
 
-# ## Использование токена
+# Использование токена
 
 Передаётся в заголовке:
 
@@ -107,7 +112,7 @@ Authorization: Bearer {token}
 
 ---
 
-# ## Защита API
+# Защита API
 
 Все методы `/car/*` защищены middleware:
 
@@ -117,7 +122,7 @@ auth:sanctum
 
 ---
 
-# ## Важно про токены
+# Важно про токены
 
 * токены НЕ привязаны к роли автоматически
 * роль проверяется отдельно (middleware / policy)
@@ -125,19 +130,19 @@ auth:sanctum
 
 ---
 
-# ## Создание автомобиля
+# Car API (CRUD)
 
-**Запрос:**
+---
+
+## Создание автомобиля
 
 ```
-POST http://localhost/api/v1/car/create
+POST /car
 ```
 
 ### Требует:
 
 * auth:sanctum
-
----
 
 ### Body:
 
@@ -162,13 +167,11 @@ POST http://localhost/api/v1/car/create
 
 ---
 
-# ## Получение списка автомобилей
+## Получение списка автомобилей
 
 ```
-GET /api/v1/car/list?page=1&pageSize=2
+GET /car?page=1&pageSize=10
 ```
-
----
 
 ### Ответ:
 
@@ -179,32 +182,54 @@ GET /api/v1/car/list?page=1&pageSize=2
     "items": [],
     "page": 1,
     "total": 10,
-    "perPage": 2
+    "perPage": 10
   }
 }
 ```
 
 ---
 
-# ## Получение автомобиля
+## Получение автомобиля
 
 ```
-GET /api/v1/car/{id}
+GET /car/{id}
 ```
 
 ---
 
-# ## Mock данные
+## Обновление автомобиля (полное)
 
 ```
-GET /api/v1/cars/generate-mock
+PUT /car/{id}
+```
+
+---
+
+## Обновление автомобиля (частичное)
+
+```
+PATCH /car/{id}
+```
+
+---
+
+## Удаление автомобиля
+
+```
+DELETE /car/{id}
+```
+
+---
+
+## Mock данные
+
+```
+GET /car/generate-mock
 ```
 
 ### Требует:
 
 * auth:sanctum
-
----
 
 ### Ответ:
 
@@ -217,16 +242,16 @@ GET /api/v1/cars/generate-mock
     "price": 123,
     "photo_url": "...",
     "contacts": "...",
-    "options": [...]
+    "options": []
   }
 }
 ```
 
 ---
 
-# ## Ошибки
+# Ошибки
 
-### 401 Unauthorized
+## 401 Unauthorized
 
 ```json
 {
@@ -237,7 +262,7 @@ GET /api/v1/cars/generate-mock
 
 ---
 
-### 403 Forbidden (роль)
+## 403 Forbidden (роль)
 
 ```json
 {
@@ -248,7 +273,7 @@ GET /api/v1/cars/generate-mock
 
 ---
 
-### Валидация
+## 422 Validation error
 
 ```json
 {
@@ -261,7 +286,7 @@ GET /api/v1/cars/generate-mock
 
 ---
 
-### Not Found
+## 404 Not Found
 
 ```json
 {
@@ -272,25 +297,27 @@ GET /api/v1/cars/generate-mock
 
 ---
 
-# ## Порядок работы
+# Порядок работы
 
 1. Войти через `/auth/login`
 2. Получить Sanctum token
-3. Сохранить token в frontend (localStorage / memory)
+3. Сохранить token (frontend / Postman)
 4. Передавать:
 
-   ```
-   Authorization: Bearer token
-   ```
+```
+Authorization: Bearer token
+```
+
 5. Вызывать `/car/*` методы
 
 ---
 
-# ## Итог архитектуры
+# Итог архитектуры
 
 * Web = session auth (Laravel стандарт)
 * API = Sanctum tokens
 * роли = поле `role`
 * доступ = `auth:sanctum`
 
----
+```
+```

@@ -25,12 +25,10 @@ class CarMapper
 
         $dto->options = [];
 
-        $option = $car['option'] ?? null;
+        $options = $car['options'] ?? null;
 
-        if ($option) {
-            // если приходит массив → оборачиваем в модель
-            $model = new CarOption($option);
-
+        if ($options) {
+            $model = new CarOption($options);
             $dto->options[] = CarOptionResponse::fromModel($model);
         }
 
@@ -44,9 +42,7 @@ class CarMapper
         $items = [];
 
         foreach ($paginator->items() as $car) {
-            $items[] = $this->toResponse(
-                $car->toArray()
-            );
+            $items[] = $this->toResponse($car->toArray());
         }
 
         return new CarListResponse(

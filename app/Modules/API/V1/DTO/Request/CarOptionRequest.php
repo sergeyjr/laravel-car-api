@@ -2,8 +2,6 @@
 
 namespace Modules\API\V1\DTO\Request;
 
-use Illuminate\Http\Request;
-
 class CarOptionRequest
 {
 
@@ -33,27 +31,27 @@ class CarOptionRequest
         $this->errors = [];
 
         if (empty($this->brand)) {
-            $this->errors['brand'][] = 'Brand is required';
+            $this->errors['brand'][] = 'Марка обязательна';
         }
 
         if (empty($this->model)) {
-            $this->errors['model'][] = 'Model is required';
+            $this->errors['model'][] = 'Модель обязательна';
         }
 
         if (empty($this->body)) {
-            $this->errors['body'][] = 'Body is required';
+            $this->errors['body'][] = 'Тип кузова обязателен';
         }
 
         if ($this->year <= 0) {
-            $this->errors['year'][] = 'Year is required';
+            $this->errors['year'][] = 'Год обязателен';
         }
 
         if ($this->year < 1885) {
-            $this->errors['year'][] = 'Year must be >= 1885';
+            $this->errors['year'][] = 'Год должен быть >= 1885';
         }
 
         if ($this->mileage < 0) {
-            $this->errors['mileage'][] = 'Mileage must be >= 0';
+            $this->errors['mileage'][] = 'Пробег должен быть >= 0';
         }
 
         return empty($this->errors);
