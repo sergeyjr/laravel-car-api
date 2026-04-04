@@ -10,6 +10,7 @@ Route::prefix('v1')->group(function () {
     // Авторизация пользователя
     Route::post('/auth/login', [ApiAuthController::class, 'login']);
 
+    // Доступ к api есть только у пользователей с ролью "api"
     Route::middleware(['auth:sanctum', 'api.role'])->group(function () {
 
         Route::prefix('car')->group(function () {
@@ -21,16 +22,16 @@ Route::prefix('v1')->group(function () {
             Route::get(RoutePaths::ID, [CarController::class, 'show']);
 
             // Создание машины
-            Route::post('/', [CarController::class, 'create']);
+            Route::post('/create', [CarController::class, 'create']);
 
             // Обновление машины (полное)
-            Route::put(RoutePaths::ID, [CarController::class, 'update']);
+            Route::put('/update' . RoutePaths::ID, [CarController::class, 'update']);
 
             // Обновление машины (частичное)
-            Route::patch(RoutePaths::ID, [CarController::class, 'update']);
+            Route::patch('/update' . RoutePaths::ID, [CarController::class, 'update']);
 
             // Удаление машины
-            Route::delete(RoutePaths::ID, [CarController::class, 'destroy']);
+            Route::delete('/delete' . RoutePaths::ID, [CarController::class, 'destroy']);
 
             // Генерация тестовых данных для создания машины
             Route::get('/generate-mock', [CarController::class, 'generateMock']);

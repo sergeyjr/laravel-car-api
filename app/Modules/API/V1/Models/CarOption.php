@@ -10,6 +10,9 @@ class CarOption extends Model
 
     protected $table = 'car_option';
 
+    // в таблице car_option нет полей created_at и updated_at
+    public $timestamps = false;
+
     protected $fillable = [
         'car_id',
         'brand',
