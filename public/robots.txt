@@ -1,0 +1,21 @@
+User-agent: *
+
+Disallow: /.env
+Disallow: /.htaccess
+Disallow: /.git
+Disallow: /.idea
+
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /database/
+Disallow: /node_modules/
+Disallow: /resources/
+Disallow: /routes/
+Disallow: /storage/
+Disallow: /tests/
+Disallow: /vendor/
+
+Disallow: /artisan
+Disallow: /phpunit.xml
+Disallow: /server.php
+Disallow: /composer.*
