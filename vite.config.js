@@ -31,7 +31,7 @@ export default defineConfig({
         port: 5173,
 
         cors: {
-            origin: 'http://laravel',
+            origin: 'http://laravel.local',
             credentials: true,
         },
 
